@@ -202,8 +202,6 @@ class Application(tk.Tk):
  
         # Supprime les widgets de la page de connexion
         self.login_frame.grid_forget()
-         # Supprime le bouton Quitter
-        self.bouton_quit.grid_forget()
  
         self.page_log_frame = tk.Frame(self)
         self.page_log_frame.place(relx=0, rely=0, relwidth=1, relheight=0.9)
