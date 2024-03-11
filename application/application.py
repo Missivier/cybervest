@@ -97,11 +97,10 @@ class Application(tk.Tk):
             self.pageLog()
 
         elif self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 13:
-            self.pageLog()
+            self.pageAdmin()
             self.canvas_logo.place_forget()
 
-        else 
-
+        
     #Création de la page login
     def login_page(self):
      # Création de la frame pour la page login
