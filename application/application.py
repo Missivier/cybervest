@@ -203,15 +203,13 @@ class Application(tk.Tk):
  
         # Supprime les widgets de la page de connexion
         self.login_frame.grid_forget()
-         # Supprime le bouton Quitter
-        #self.bouton_quit.grid_forget()
  
         self.page_log_frame = tk.Frame(self)
         self.page_log_frame.place(relx=0, rely=0, relwidth=1, relheight=0.9)
  
-        self.label = Label(self, text="Logistique", font=('Helvetica', 24))
+        self.label = Label(self.page_log_frame, text="Logistique", font=('Helvetica', 24))
         self.label.pack(pady=10)
- 
+        '''
         # Création de la grille pour afficher les articles
         self.tree = ttk.Treeview(self, columns=("Nom", "Prix", "Référence Interne", "Stock Disponible"), show="headings")
  
@@ -243,7 +241,7 @@ class Application(tk.Tk):
         for col in columns:
             self.sort_order[col] = True  # Initialisation à True pour tri ascendant par défaut
             self.tree.heading(col, text=col, command=lambda c=col: self.sort_column_log(c))
- 
+        
         # Ajout de la case d'entrée pour la quantité d'articles à retirer
         self.stock_entry_label = Label(self.page_log_frame, text="Affectation stock:")
         self.stock_entry_label.place(relx=0.5, rely=0.2, anchor='center')
@@ -253,7 +251,7 @@ class Application(tk.Tk):
  
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
-        self.validate_stock_button.place(relx=0.54, rely=0.205, anchor='center')
+        self.validate_stock_button.place(relx=0.54, rely=0.205, anchor='center')'''
 
     # Creation et gestion bouton retour
     def Bouton_retour(self):
