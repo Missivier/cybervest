@@ -4,15 +4,22 @@ Projet Application Python (Tkinter)
 
 Entreprise - Cybervest 
 
+![Logo UIMM](https://github.com/Missivier/cybervest/blob/main/images/logo-uimm-250x250.jpg)
+![Logo Cybervest](https://github.com/Missivier/cybervest/blob/main/images/Logo1.png)
+
 Cybervest est une entreprise de fabrication de veste haut de gamme. Les produits se démarquent par différentes fonctionnalités. 
 
+![Logo bouee](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_bouee.png "Veste Bouée")
+![Logo chauffante](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_chauffante.png "Veste Chauffante")
+![Logo parachute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_parachute.png "Veste Parachute")
+![Logo refrigeree](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_refrigeree.png "Veste Réfrigérée")
 
 **PROJET**
 
 Cybervest évolue vers une organisation industrielle 4.0 en évoluant l'organisation de la production avec la mise en place d'un ERP (Odoo).
 Pour cela, le service informatique a pour but d'intégrer une application pour intéragir avec l'ERP et la BDD. 
 
-Fonctions demandées: - le déploiement de l'ERP ODoo avec sa BDD
+Fonctions demandées: - le déploiement de l'ERP Odoo avec sa BDD
                      - création des comptes (Admin, Logistique, Production, Vente/Commercial)
                      - une page logistique avec l'affichage des articles (nom, code, prix, image) et un bouton pour modifier les quantités d'articles en stock
                      - une page production avec l'affichage des OFs (numéro, date, quantité à produire) et un bouton pour modifier les quantités produites 
@@ -29,7 +36,7 @@ Pour le déploiement de l'application, il faut: - Python 3
 
 **Installation**
 
-***1. Ouvrir l'invite de commande***
+***1. Ouvrir l'invite de commande `Windows + X`***
 
 ***2. Se rendre dans le répertoire Documents***
 
@@ -43,8 +50,29 @@ Pour le déploiement de l'application, il faut: - Python 3
   3. Cliquer sur **AddStack** pour ajouter un stack
   4. Donner un nom ici "odoo70"
   5. Sélectionner **Web editor**
-  6. Copier le fichier "docker-compose.yml" du projet GitHub
+  6. Copier le fichier "docker-compose.yml" du projet GitHub ou copier le code suivant
+
 **Code**:
+  ```
+  version: '2'
+  services :
+    web:
+      image: odoo:15
+      depends_on:
+        - mydb
+      ports:
+        - "8069:8069"
+      environment:
+       - HOST=mydb
+       - USER=odoo
+       - PASSWORD=myodoo
+    mydb: 
+       image: postgres:13
+       environment:
+         - POSTGRES_DB=postgres
+         - POSTGRES_PASSWORD=myodoo
+         - POSTGRES_USER=odoo
+  ```
 
 
-  8. 
+

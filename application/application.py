@@ -27,7 +27,7 @@ class Application(tk.Tk):
         #---------------------------------------------------------------------------------------------------------------
             # Fond d'écran
         # Chargement de l'image avec Pillow
-        fond_ecran = "images/v915-wit-012.png"
+        fond_ecran = "cybervest/images/v915-wit-012.png"
         self.image_pil = Image.open(fond_ecran)
         self.image_tk = ImageTk.PhotoImage(self.image_pil)
 
@@ -41,12 +41,21 @@ class Application(tk.Tk):
         # Associer la fonction de redimensionnement à l'événement de redimensionnement de la fenêtre
         self.bind("<Configure>", self.redimensionner_image)
         #---------------------------------------------------------------------------------------------------------------
-        # Mise en place du logo
-        logo_path = "images/Logo1.png"
+        # Mise en place du logo cybervest
+        logo_path = "cybervest/images/Logo1.png"
         self.image_pil_2 = Image.open(logo_path)
         self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
         self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
-        self.canvas_logo.place(relx=0.5, rely=0.5, anchor='center')
+        self.canvas_logo.place(relx=0.05, rely=0.85, anchor='center')
+        self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
+        self.iconphoto(True, self.image_tk_2)
+
+        # Mise en place du logo cybervest
+        logo_path = "cybervest/images/Logo1.png"
+        self.image_pil_2 = Image.open(logo_path)
+        self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
+        self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
+        self.canvas_logo.place(relx=0.05, rely=0.85, anchor='center')
         self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
         self.iconphoto(True, self.image_tk_2)
 
@@ -93,7 +102,7 @@ class Application(tk.Tk):
         if self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 9 :
             self.pageProd()
             
-        elif self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 10:
+        if self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 10:
             self.pageLog()
 
         elif self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 13:
@@ -129,7 +138,8 @@ class Application(tk.Tk):
         
     #Creation de la page Production
     def pageProd(self):
-        #self.Number_page == 2
+
+        #self.show_button_deconnexion()
         # Supprime les widgets de la page de connexion
         self.login_frame.place_forget()
         #Création de la page
@@ -198,20 +208,19 @@ class Application(tk.Tk):
 #     Méthodes page LOGISTIQUE
 #----------------------------------------------------------------------------------------------------
 
-    def pageLog(self, master=None):
+    def pageLog(self):
  
         # Supprime les widgets de la page de connexion
         self.login_frame.grid_forget()
-         # Supprime le bouton Quitter
-
-        self.page_log_frame = tk.Frame(self, bg="#DAD7D7")
+ 
+        self.page_log_frame = tk.Frame(self)
         self.page_log_frame.place(relx=0, rely=0, relwidth=1, relheight=0.9)
  
-        self.label = Label(self, text="Logistique", font=('Helvetica', 24))
+        self.label = Label(self.page_log_frame, text="Logistique", font=('Helvetica', 24))
         self.label.pack(pady=10)
- 
+        
         # Création de la grille pour afficher les articles
-        self.tree = ttk.Treeview(self, columns=("Nom", "Prix", "Référence Interne", "Stock Disponible"), show="headings")
+        self.tree = ttk.Treeview(self.page_log_frame, columns=("Nom", "Prix", "Référence Interne", "Stock Disponible"), show="headings")
  
         # Configuration des en-têtes de colonnes
         self.tree.heading("Nom", text="Nom", command=lambda: self.sort_column_log("Nom", False))
@@ -241,17 +250,17 @@ class Application(tk.Tk):
         for col in columns:
             self.sort_order[col] = True  # Initialisation à True pour tri ascendant par défaut
             self.tree.heading(col, text=col, command=lambda c=col: self.sort_column_log(c))
- 
+        
         # Ajout de la case d'entrée pour la quantité d'articles à retirer
         self.stock_entry_label = Label(self.page_log_frame, text="Affectation stock:")
-        self.stock_entry_label.place(relx=0.5, rely=0.2, anchor='center')
+        self.stock_entry_label.place(relx=0.5, rely=0.5, anchor='center')
  
         self.stock_entry = Entry(self.page_log_frame)
-        self.stock_entry.place(relx=0.48, rely=0.21)
+        self.stock_entry.place(relx=0.455, rely=0.51)
  
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
-        self.validate_stock_button.place(relx=0.54, rely=0.205, anchor='center')
+        self.validate_stock_button.place(relx=0.50, rely=0.56, anchor='center')
 
     # Creation et gestion bouton retour
     def Bouton_retour(self):
@@ -510,7 +519,7 @@ class Application(tk.Tk):
             # Afficher l'image dans un Label
             image_label = Label(self.page_log_frame, image=img)
             image_label.photo = img
-            image_label.place(relx=0.6, rely=0)
+            image_label.place(relx=0.7, rely=0)
  
                 
     def get_article_index_log(self, article_name):
