@@ -25,59 +25,59 @@ class Application(tk.Tk):
         self.screen_height = self.winfo_screenheight()#Longueur fenetre
         self.geometry(f"{self.screen_width}x{self.screen_height}+0+0")#Equation des L*l
         #---------------------------------------------------------------------------------------------------------------
-            # Fond d'écran
+        # Fond d'écran
         # Chargement de l'image avec Pillow
         fond_ecran = "cybervest/images/v915-wit-012.png"
         self.image_pil = Image.open(fond_ecran)
         self.image_tk = ImageTk.PhotoImage(self.image_pil)
 
-        # Création d'un widget Canvas pour afficher l'image
-        self.canvas_FD = tk.Canvas(self, width=self.image_tk.width(), height=self.image_tk.height())
-        self.canvas_FD.pack(expand=tk.YES, fill=tk.BOTH)
-
-        # Affichage de l'image en fond d'écran
+        # Création du Canvas pour afficher l'image
+        self.canvas_FD = tk.Canvas(self, bg="white", highlightthickness=0)
+        self.canvas_FD.pack(fill=tk.BOTH, expand=True)
         self.canvas_FD.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
+
+        # Création du frame client
+        client = tk.Frame(self.canvas_FD, bg="", width=self.screen_width, height=self.screen_height)
+        client.place(relx=0, rely=0)
 
         # Associer la fonction de redimensionnement à l'événement de redimensionnement de la fenêtre
         self.bind("<Configure>", self.redimensionner_image)
+
+        # Bloquer le redimensionnement de la fenêtre
+        self.resizable(False, False)
+
         #---------------------------------------------------------------------------------------------------------------
         # Mise en place du logo cybervest
         logo_path = "cybervest/images/Logo1.png"
         self.image_pil_2 = Image.open(logo_path)
         self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
-        self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
-        self.canvas_logo.place(relx=0.05, rely=0.85, anchor='center')
+        self.canvas_logo = tk.Canvas(client, width=self.image_tk_2.width(), height=self.image_tk_2.height())
+        self.canvas_logo.place(relx=0.03, rely=0.85, anchor='center')
         self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
         self.iconphoto(True, self.image_tk_2)
 
-        # Mise en place du logo cybervest
-        logo_path = "cybervest/images/Logo1.png"
-        self.image_pil_2 = Image.open(logo_path)
-        self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
-        self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
-        self.canvas_logo.place(relx=0.05, rely=0.85, anchor='center')
-        self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
-        self.iconphoto(True, self.image_tk_2)
+        # Mise en place du logo UIMM
+        logo_path_2 = "cybervest/images/logo-uimm-250x250.jpg"
+        self.image_pil_3 = Image.open(logo_path_2)
+        self.image_tk_3 = ImageTk.PhotoImage(self.image_pil_3)
+        self.canvas_logo_2 = tk.Canvas(client, width=self.image_tk_3.width(), height=self.image_tk_3.height())
+        self.canvas_logo_2.place(relx=0.08, rely=0.85, anchor='center')
+        self.canvas_logo_2.create_image(0, 0, anchor=tk.NW, image=self.image_tk_3)
+        #---------------------------------------------------------------------------------------------------------------
 
         # Création d'un bouton pour quitter l'application
-        bouton_quit = tk.Button(self, text="Quitter", bg="#DAD7D7", font=("Arial", 12), command=self.destroy)
-        bouton_quit.place(relx=1, rely=1, anchor='se')  # Positionne le bouton en bas à droite
-        
-        #Creation bouton déco
-        self.Button_deco = tk.Button(self, text="Deconnexion",fg="black", bg="#DAD7D7", font=("Arial", 12), command=self.deconnexion)
-
-        #Creation bouton pour aller retourner menu admin
-        self.Button_retour = tk.Button(self, text="Retour",fg="black", bg="#DAD7D7", font=("Arial", 20), command=self.Retour)
+        bouton_quit = tk.Button(client, text="Quitter", bg="#DAD7D7", font=("Arial", 12), command=self.destroy)
+        bouton_quit.place(relx=1, rely=0.90, anchor='se')  # Positionne le bouton en bas à droite
 
         self.erp = ERP("db_cybervest")
 
         #Afficher La page de login
         self.login_page()
-    
-    def redimensionner_image(self, event):
 
-        nouvelle_largeur = event.width
-        nouvelle_hauteur = event.height
+
+    def redimensionner_image(self, event):
+        nouvelle_largeur = self.winfo_width()
+        nouvelle_hauteur = self.winfo_height()
 
         # Redimensionnement de l'image avec Pillow
         image_redimensionnee = self.image_pil.resize((nouvelle_largeur, nouvelle_hauteur), Image.ANTIALIAS)
@@ -93,45 +93,60 @@ class Application(tk.Tk):
 
         # Mise à jour de la référence à l'image pour éviter la suppression
         self.canvas_FD.image = nouvelle_image_tk
-    
+        
+
+        # Création d'un widget Canvas pour afficher l'image
+        self.canvas_FD = tk.Canvas(self, width=self.image_tk.width(), height=self.image_tk.height())
+        self.canvas_FD.pack(expand=tk.YES, fill=tk.BOTH)
+
+        # Affichage de l'image en fond d'écran
+        self.canvas_FD.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
+
+        # Associer la fonction de redimensionnement à l'événement de redimensionnement de la fenêtre
+        self.bind("<Configure>", self.redimensionner_image)
+
+
+
         
 #--------------------------------------------------------------------------------------------------------------------------------------------
     #Fonction Login
-    def connexion(self):
+    def connexion(client):
         # Créer l'instance de la classe ERP ici, après que l'utilisateur ait cliqué sur le bouton de connexion.
-        if self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 9 :
-            self.pageProd()
+        if client.erp.connexion( client.entry_username.get(), client.entry_password.get()) == 9 :
+            client.pageProd()
+            client.login_frame.place_forget()
             
-        if self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 10:
-            self.pageLog()
+        if client.erp.connexion( client.entry_username.get(), client.entry_password.get()) == 10:
+            client.pageLog()
+            client.login_frame.place_forget()
 
-        elif self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 13:
-            self.pageAdmin()
-            self.canvas_logo.place_forget()
+        elif client.erp.connexion( client.entry_username.get(), client.entry_password.get()) == 13:
+            client.pageAdmin()
+            client.canvas_logo.place_forget()
 
     #Création de la page login
-    def login_page(self):
+    def login_page(client):
      # Création de la frame pour la page login
-        self.login_frame = tk.Frame(self,bg="#c2bebd")
-        self.login_frame.place(relx=0.5, rely=0.5, relwidth=0.2,relheight=0.2,anchor="center")
+        client.login_frame = tk.Frame(client,bg="#c2bebd")
+        client.login_frame.place(relx=0.5, rely=0.3, relwidth=0.2,relheight=0.2,anchor="center")
  
-        border_frame = tk.Frame(self.login_frame,bg="#DAD7D7")
+        border_frame = tk.Frame(client.login_frame,bg="#DAD7D7")
         border_frame.place(relx=0.013, rely=0.02, relwidth=0.975,relheight=0.96)
  
-        label_username = tk.Label(self.login_frame, text="Nom d'utilisateur:",bg="#DAD7D7")
-        label_password = tk.Label(self.login_frame, text="Mot de passe:",bg="#DAD7D7")
+        label_username = tk.Label(client.login_frame, text="Nom d'utilisateur:",bg="#DAD7D7")
+        label_password = tk.Label(client.login_frame, text="Mot de passe:",bg="#DAD7D7")
  
-        self.entry_username = tk.Entry(self.login_frame)
-        self.entry_password = tk.Entry(self.login_frame, show="*")
-        button_login = tk.Button(self.login_frame, text="Connexion", command=self.connexion)
+        client.entry_username = tk.Entry(client.login_frame)
+        client.entry_password = tk.Entry(client.login_frame, show="*")
+        button_login = tk.Button(client.login_frame, text="Connexion", command=client.connexion)
  
         label_username.place(relx=0.2, rely=0.2, anchor='center')
         label_password.place(relx=0.2, rely=0.45, anchor='center')
  
-        self.entry_username.place(relx=0.7, rely=0.2,relwidth=0.5,relheight=0.15 ,anchor='center')
-        self.entry_password.place(relx=0.7, rely=0.45,relwidth=0.5,relheight=0.15 ,anchor='center')
+        client.entry_username.place(relx=0.7, rely=0.2,relwidth=0.5,relheight=0.15 ,anchor='center')
+        client.entry_password.place(relx=0.7, rely=0.45,relwidth=0.5,relheight=0.15 ,anchor='center')
         button_login.place(relx=0.5, rely=0.8, relwidth=0.5,relheight=0.2,anchor='center')
-
+'''
 #----------------------------------------------------------------------------------------------------
 #     Méthodes page PRODUCTION
 #----------------------------------------------------------------------------------------------------
@@ -143,8 +158,8 @@ class Application(tk.Tk):
         # Supprime les widgets de la page de connexion
         self.login_frame.place_forget()
         #Création de la page
-        self.page_prod_frame = tk.Frame(self,bg="#DAD7D7")
-        self.page_prod_frame.place(relx=0, rely=0, relwidth=1, relheight=0.9)
+        self.page_prod_frame = tk.Frame(self,bg= None)
+        self.page_prod_frame.place(relx=0.3, rely=0.2, relwidth=0.5, relheight=0.5)
          
         self.label = Label(self.page_prod_frame, text="Production", font=('Helvetica', 24))
         self.label.pack(pady=10)
@@ -211,10 +226,10 @@ class Application(tk.Tk):
     def pageLog(self):
  
         # Supprime les widgets de la page de connexion
-        self.login_frame.grid_forget()
- 
+        #self.login_frame.grid_forget()
+        
         self.page_log_frame = tk.Frame(self)
-        self.page_log_frame.place(relx=0, rely=0, relwidth=1, relheight=0.9)
+        self.page_log_frame.place(relx=0.3, rely=0.5, relwidth=0.5, relheight=0.5, bg = None)
  
         self.label = Label(self.page_log_frame, text="Logistique", font=('Helvetica', 24))
         self.label.pack(pady=10)
@@ -527,4 +542,4 @@ class Application(tk.Tk):
             if article["name"] == article_name:
                 return i
         return -1  # Retourne -1 si l'article n'est pas trouvé
-   
+   '''
