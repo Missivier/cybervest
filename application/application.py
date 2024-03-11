@@ -90,16 +90,17 @@ class Application(tk.Tk):
     #Fonction Login
     def connexion(self):
         # Créer l'instance de la classe ERP ici, après que l'utilisateur ait cliqué sur le bouton de connexion.
-        if self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 2 :
+        if self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 9 :
             self.pageProd()
             
-        elif self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 6:
-            self.pageAdmin()
+        elif self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 10:
+            self.pageLog()
+
+        elif self.erp.connexion( self.entry_username.get(), self.entry_password.get()) == 13:
+            self.pageLog()
             self.canvas_logo.place_forget()
 
-
-        else:
-            self.pageLog()
+        else 
 
     #Création de la page login
     def login_page(self):
