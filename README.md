@@ -9,6 +9,10 @@ Entreprise - Cybervest
 
 Cybervest est une entreprise de fabrication de veste haut de gamme. Les produits se démarquent par différentes fonctionnalités. 
 
+![Logo bouee](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_bouee.png)
+![Logo chauffante](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_chauffante.png)
+![Logo parachute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_parachute.png)
+![Logo refrigeree](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_refrigeree.png)
 
 **PROJET**
 
@@ -32,11 +36,12 @@ Pour le déploiement de l'application, il faut: - Python 3
 
 **Installation**
 
-***1. Ouvrir l'invite de commande `Windows + X`***
+***1. Ouvrir l'invite de commande***
 
 ***2. Se rendre dans le répertoire Documents***
 
 ***3. Cloner le projet GitHub***
+
 
 ***4. Installation des packages PIP***
 
