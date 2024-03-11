@@ -11,7 +11,7 @@ class ERP:
 #----------------------------------------------------------------------------------------------------
     
     def __init__(self, db_name=None, ):
-        self.odoo_ipaddr = "172.31.11.2"
+        self.odoo_ipaddr = "172.31.11.241"
         self.odoo_port = "8069"
         self.odoo_url = f'http://{self.odoo_ipaddr}:{self.odoo_port}'
         self.db_name = db_name
