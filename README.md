@@ -4,6 +4,9 @@ Projet Application Python (Tkinter)
 
 Entreprise - Cybervest 
 
+![Logo UIMM](https://github.com/Missivier/cybervest/blob/main/images/logo-uimm-250x250.jpg)
+![Logo Cybervest](https://github.com/Missivier/cybervest/blob/main/images/Logo1.png)
+
 Cybervest est une entreprise de fabrication de veste haut de gamme. Les produits se démarquent par différentes fonctionnalités. 
 
 
@@ -35,6 +38,7 @@ Pour le déploiement de l'application, il faut: - Python 3
 
 ***3. Cloner le projet GitHub***
 
+
 ***4. Installation des packages PIP***
 
 ***5. Déployer docker***
@@ -43,8 +47,29 @@ Pour le déploiement de l'application, il faut: - Python 3
   3. Cliquer sur **AddStack** pour ajouter un stack
   4. Donner un nom ici "odoo70"
   5. Sélectionner **Web editor**
-  6. Copier le fichier "docker-compose.yml" du projet GitHub
+  6. Copier le fichier "docker-compose.yml" du projet GitHub ou copier le code suivant
+
 **Code**:
+```
+version: '2'
+services :
+  web:
+    image: odoo:15
+    depends_on:
+      - mydb
+    ports:
+      - "8069:8069"
+    environment:
+     - HOST=mydb
+     - USER=odoo
+     - PASSWORD=myodoo
+  mydb: 
+     image: postgres:13
+     environment:
+       - POSTGRES_DB=postgres
+       - POSTGRES_PASSWORD=myodoo
+       - POSTGRES_USER=odoo
+```
 
 
-  8. 
+
