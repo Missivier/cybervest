@@ -100,7 +100,6 @@ class Application(tk.Tk):
             self.pageAdmin()
             self.canvas_logo.place_forget()
 
-
     #Création de la page login
     def login_page(self):
      # Création de la frame pour la page login
