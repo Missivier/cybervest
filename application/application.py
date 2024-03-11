@@ -41,12 +41,21 @@ class Application(tk.Tk):
         # Associer la fonction de redimensionnement à l'événement de redimensionnement de la fenêtre
         self.bind("<Configure>", self.redimensionner_image)
         #---------------------------------------------------------------------------------------------------------------
-        # Mise en place du logo
+        # Mise en place du logo cybervest
         logo_path = "cybervest/images/Logo1.png"
         self.image_pil_2 = Image.open(logo_path)
         self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
         self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
-        self.canvas_logo.place(relx=0.5, rely=0.5, anchor='center')
+        self.canvas_logo.place(relx=0.05, rely=0.85, anchor='center')
+        self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
+        self.iconphoto(True, self.image_tk_2)
+
+        # Mise en place du logo cybervest
+        logo_path = "cybervest/images/Logo1.png"
+        self.image_pil_2 = Image.open(logo_path)
+        self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
+        self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
+        self.canvas_logo.place(relx=0.05, rely=0.85, anchor='center')
         self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
         self.iconphoto(True, self.image_tk_2)
 

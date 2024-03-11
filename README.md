@@ -32,12 +32,11 @@ Pour le déploiement de l'application, il faut: - Python 3
 
 **Installation**
 
-***1. Ouvrir l'invite de commande***
+***1. Ouvrir l'invite de commande `Windows + X`***
 
 ***2. Se rendre dans le répertoire Documents***
 
 ***3. Cloner le projet GitHub***
-
 
 ***4. Installation des packages PIP***
 
