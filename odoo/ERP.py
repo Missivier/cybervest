@@ -3,15 +3,15 @@ import base64
 from datetime import datetime, timedelta
 from io import BytesIO
 from PIL import Image
- 
+
 class ERP:
-    
+
 #----------------------------------------------------------------------------------------------------
 #     Constructeur
 #----------------------------------------------------------------------------------------------------
     
     def __init__(self, db_name=None, ):
-        self.odoo_ipaddr = "172.31.11.2"
+        self.odoo_ipaddr = "172.31.11.241"
         self.odoo_port = "8069"
         self.odoo_url = f'http://{self.odoo_ipaddr}:{self.odoo_port}'
         self.db_name = db_name
@@ -34,7 +34,6 @@ class ERP:
 #     Méthodes Gestion USER
 #----------------------------------------------------------------------------------------------------
 
- 
     def connexion(self, username=None , password=None):
         self.uid = self.common.authenticate(self.db_name, username, password, {})
         if self.uid:
@@ -112,6 +111,7 @@ class ERP:
  
         # Mettre à jour la liste des images_stock avec les images des produits
         self.images_stock = [product['image_1920'] and base64.b64decode(product['image_1920']) for product in products]
+
 #----------------------------------------------------------------------------------------------------
 #     Méthodes WRITE
 #----------------------------------------------------------------------------------------------------
@@ -194,7 +194,7 @@ if __name__ == "__main__":
     # tentative requete avant connexion     
     erp_instance.obtenir_informations_produits()
     
-    erp_instance.connexion(username='alexandre', password='jslpdl')
+    erp_instance.connexion(username='adminprod', password='adminprod')
 
     print("--------------------------")
     
