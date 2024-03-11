@@ -27,7 +27,7 @@ class Application(tk.Tk):
         #---------------------------------------------------------------------------------------------------------------
             # Fond d'écran
         # Chargement de l'image avec Pillow
-        fond_ecran = "cybervest/images/v915-wit-012.png"
+        fond_ecran = "images/v915-wit-012.png"
         self.image_pil = Image.open(fond_ecran)
         self.image_tk = ImageTk.PhotoImage(self.image_pil)
 
@@ -42,7 +42,7 @@ class Application(tk.Tk):
         self.bind("<Configure>", self.redimensionner_image)
         #---------------------------------------------------------------------------------------------------------------
         # Mise en place du logo
-        logo_path = "cybervest/images/Logo1.png"
+        logo_path = "images/Logo1.png"
         self.image_pil_2 = Image.open(logo_path)
         self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
         self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
