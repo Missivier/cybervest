@@ -32,7 +32,7 @@ Pour le déploiement de l'application, il faut: - Python 3
 
 **Installation**
 
-***1. Ouvrir l'invite de commande `Widows + X`***
+***1. Ouvrir l'invite de commande `Windows + X`***
 
 ***2. Se rendre dans le répertoire Documents***
 
