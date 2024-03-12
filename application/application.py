@@ -22,6 +22,7 @@ class Application(tk.Tk):
 
         self.entry_username = tk.StringVar()
         self.entry_password = tk.StringVar()
+        self.activated_admin = 0
 
         #Creation de la page self
         self.title("Application CyberVest")#Titre
@@ -152,7 +153,7 @@ class Application(tk.Tk):
 
         # Connexion avec les informations fournies
         resultat_connexion = self.erp.connexion(username, password)
-        print(resultat_connexion)
+        #resultat_connexion = 0
         # Vérifier le résultat de la connexion
         if resultat_connexion == 9:
             self.user = "Production"
@@ -512,7 +513,6 @@ class Application(tk.Tk):
 #Création de la page Admin
     def pageAdmin(self):
         self.Number_page = 3
-        self.activated_admin = 1
 
         self.page_admin_frame = tk.Frame(self, bg="")
         self.page_admin_frame.place(relx=0, rely=0, relwidth=1, relheight=0.8)
