@@ -43,13 +43,6 @@ class ERP:
             print('Échec de la connexion.')
         return self.uid
     
-    def connexion(self, username=None, password=None):
-        self.uid = self.common.authenticate(self.db_name, username, password, {})
-        if self.uid:
-            print('Connexion réussie. UID utilisateur:', self.uid)
-            self.password = password
-        else:
-            print('Échec de la connexion.')
 
     def verifier_disponibilite_odoo(self):
         try:
