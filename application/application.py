@@ -215,14 +215,14 @@ class Application(tk.Tk):
 
         # Ajout de la case d'entrée pour la quantité d'articles à retirer
         self.stock_entry_label_prod = Label(self.page_prod_frame, text="Quantité réalisé")
-        self.stock_entry_label_prod.place(relx=0.5, rely=0.5, anchor='center')
+        self.stock_entry_label_prod.place(relx=0.5, rely=0.6, anchor='center')
  
         self.stock_entry_prod = Entry(self.page_prod_frame)
-        self.stock_entry_prod.place(relx=0.455, rely=0.51)
+        self.stock_entry_prod.place(relx=0.455, rely=0.62)
  
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_prod_frame, text="Valider", command=self.update_stock_prod)
-        self.validate_stock_button.place(relx=0.50, rely=0.56, anchor='center')
+        self.validate_stock_button.place(relx=0.50, rely=0.7, relwidth= 0.15, anchor='center')
 
  
     def affichage_tableau_prod(self):
@@ -384,16 +384,6 @@ class Application(tk.Tk):
         self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
         self.validate_stock_button.place(relx=0.50, rely=0.56, anchor='center')
 
-    # Creation et gestion bouton retour
-    #def Bouton_retour(self):
-        #self.Button_retour.place(relx=0, rely=1, anchor="sw")
-    #def Retour(self):
-        #Fonction pour revenir sur le menu admin
-        #self.Button_retour.place_forget()
-        #self.page_prod_frame.place_forget()
-        #self.page_log_frame.place_forget()
-        #self.pageAdmin()
-
     def affichage_tableau_log(self):
         # Utiliser l'instance de la classe ERP
         self.erp.obtenir_informations_produits()
@@ -415,11 +405,7 @@ class Application(tk.Tk):
 
     def update_stock_log(self):
         # Récupération de la quantité saisie dans la case d'entrée
-<<<<<<< HEAD
-        quantite = self.result.get()
-=======
         quantite = self.stock_entry_log.get()
->>>>>>> 859b7b33d06b07b083e37ed7dd63c4c5eb367d89
 
         # Assurez-vous que la quantité est un nombre entier
         try:
@@ -496,42 +482,6 @@ class Application(tk.Tk):
             self.tree.insert("", "end", values=item)
    
 
-<<<<<<< HEAD
-        # Assurez-vous que la quantité est un nombre entier
-        try:
-            quantite = int(quantite)
-        except ValueError:
-            print("Veuillez saisir un nombre entier pour la quantité.")
-            return
-
-        # Stockage de la nouvelle quantité dans la variable new_stock
-        self.new_stock = quantite
-
-        # Obtenez la ligne sélectionnée
-        item_selectionne = self.tree.selection()
-
-        if not item_selectionne:
-            print("Aucune ligne sélectionnée.")
-            return
-
-        # Obtenez le nom de l'article associé à la ligne sélectionnée
-        nom_article = self.tree.item(item_selectionne, "values")[0]
-
-        # Mise à jour du stock dans Odoo
-        succes = self.erp.update_odoo_stock(nom_article, quantite)
-
-        if succes:
-            # Affichage d'un message de confirmation dans le terminal
-            print(f"Stock de {quantite} articles de '{nom_article}' mis à jour avec succès dans Odoo.")
-        else:
-            # En cas d'échec de la mise à jour dans Odoo
-            print(f"Échec de la mise à jour du stock pour '{nom_article}' dans Odoo.")
-
-        # Effacement de la case d'entrée et du bouton Valider après la mise à jour
-        self.stock_entry.delete(0, 'end')
-    
-=======
->>>>>>> 859b7b33d06b07b083e37ed7dd63c4c5eb367d89
 #----------------------------------------------------------------------------------------------------
 #     Méthodes page ADMIN
 #----------------------------------------------------------------------------------------------------
@@ -555,17 +505,7 @@ class Application(tk.Tk):
 #----------------------------------------------------------------------------------------------------
 #     Méthodes gestion des BOUTONS
 #----------------------------------------------------------------------------------------------------
-        
-    def Boutton_retour(self):
-        #Creation bouton pour aller retourner menu admin
-        self.Button_retour = tk.Button(self, text="Retour",fg="black", bg="#DAD7D7", font=("Arial", 20), command=self.Retour)
-        self.Button_retour.place(relx=0.1, rely=0.9, anchor="sw")
- 
-    def Retour(self):
-        #Fonction pour revenir sur le menu admin
-        self.Button_retour.place_forget()
- 
- 
+
     def update_table(self):
         # Effacer les éléments existants dans la Treeview
         for item in self.tree.get_children():
