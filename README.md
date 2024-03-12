@@ -76,6 +76,7 @@ Dans le terminal, taper la commande `pip install -r requirements.txt`
          - POSTGRES_PASSWORD=myodoo
          - POSTGRES_USER=odoo
   ```
-
-
+  7. Cliquer sur **Deploy the stack**
+  8. Vos images **Odoo** et **Postgres** doivent passer en **running**
+![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
 
