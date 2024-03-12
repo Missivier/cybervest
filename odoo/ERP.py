@@ -19,7 +19,8 @@ class ERP:
         self.common = xmlrpc.client.ServerProxy(f'{self.odoo_url}/xmlrpc/2/common', allow_none=True)
         self.models = xmlrpc.client.ServerProxy(f'{self.odoo_url}/xmlrpc/2/object', allow_none=True)
         self.uid = 0
- 
+
+
         self.nom_article = []
         self.prix_article = []
         self.reference_interne = []
@@ -39,6 +40,7 @@ class ERP:
         if self.uid:
             print('Connexion réussie. UID utilisateur:', self.uid)
             self.password = password
+
         else:
             print('Échec de la connexion.')
         return self.uid
