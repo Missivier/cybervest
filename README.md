@@ -24,7 +24,7 @@ Pour cela, le service informatique a pour but d'intégrer une application pour i
 ![Logo chauffante](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_chauffante.png "Veste Chauffante")
 ![Logo parachute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_parachute.png "Veste Parachute")
 ![Logo refrigeree](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_refrigeree.png "Veste Réfrigérée")
-
+![Logo astronaute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_astronaute.png "Veste Astronaute")
 
 ## **Prérequis**
 
@@ -68,16 +68,101 @@ Pour le déploiement de l'application, il faut: - Python 3
   8. Vos images **Odoo** et **Postgres** doivent passer en **running**
 ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
 
+### ***2. Installation du Serveur ERP sur une machine virtuelle Linux***
+  1. Récupération du Serveur ERP
+ ```
+git clone https://github.com/Missivier/cybervest
+  ```
+  2. Accès au Serveur ERP Odoo
 
-***1. Ouvrir l'invite de commande***
-`Windows + X`
+Ouvrez le serveur ERP Odoo dans votre navigateur en accédant à ce lien : http://localhost:8069 ou en cliquant sur "8069" dans la colonne "published ports" du Docker fraîchement créé.
 
-***2. Se rendre dans le répertoire Documents***
+  3. Restauration de la Base de Données
 
-***3. Cloner le projet GitHub***
+Sur le site, accédez à "Gestion des bases de données" puis sélectionnez "Restore Database".
+Entrez le mot de passe principal (MSIR5), parcourez et sélectionnez le fichier .ZIP téléchargé dans le même répertoire que le référentiel cloné.
+Nommez votre base de données "cybervest".
 
-***4. Installation des packages PIP***
+  4. Configuration de l'Adresse IP
 
-Dans le terminal, taper la commande `pip install -r requirements.txt`
+Changez l'adresse IP de votre machine virtuelle hébergeant le Docker en 172.31.11.241.
+Modifiez les paramètres réseau pour passer en mode pont.
+Déconnectez et reconnectez-vous du réseau WiFi de la machine virtuelle pour appliquer les modifications.
+
+### ***3. Installation du Desktop sur Linux***
+  1. Configuration du Réseau
+
+Connectez-vous au réseau "afpicfai_wifi_guests" et passez les paramètres réseau de votre VM en mode pont. Redémarrez la VM.
+
+  2. Récupération du Code
+ ```
+git clone https://github.com/Missivier/cybervest
+  ```
+  3. Installation des Dépendances
+ ```
+pip install -r requierement_linux.txt
+  ```
+  4. Configuration du Lien de Lancement
+ ```
+chmod +x /Chemin/De/Votre/Fichier/Launcher_cybervest.sh
+  ```
+  5. Lancement de l'Application
+
+Exécutez le lanceur depuis le raccourci bureau et connectez-vous avec vos identifiants ERP.
+
+### ***4. Installation du Desktop pour Windows***
+  1. Configuration du Réseau
+
+Connectez-vous au réseau "afpicfai_wifi_guests" et passez les paramètres réseau de votre VM en mode pont. Redémarrez la VM.
+
+ 2. Installation de Git Bash
+    
+Téléchargez et installez Git Bach depuis [ce lien](https://git-scm.com/download/win) en sélectionnant "64-bit Git for Windows Setup".
+
+  3. Récupération du Code
+ ```
+git clone https://github.com/Missivier/cybervest
+  ```
+
+  4. Installation de Python
+
+Installez Python en ouvrant l'invite de commande et en tapant python3. Suivez les instructions pour installer à partir du Microsoft Store.
+Vérifiez si Python s'est correctement installé en tapant python --version dans l'invite de commande.
+
+  5. Installation des Dépendances
+ ```
+pip install -r requierement_windows.txt
+  ```
+
+  6. Configuration du Lien de Lancement
+
+Accédez au dossier cloné, puis créez un raccourci pour "Launcher_cybervest.sh" sur le bureau.
+
+  7. Lancement de l'Application
+
+Exécutez le lanceur depuis le raccourci bureau et connectez-vous avec vos identifiants ERP.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
