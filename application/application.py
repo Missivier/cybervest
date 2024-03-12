@@ -149,7 +149,7 @@ class Application(tk.Tk):
 
         # Connexion avec les informations fournies
         resultat_connexion = self.erp.connexion(username, password)
-
+        print(resultat_connexion)
         # Vérifier le résultat de la connexion
         if resultat_connexion == 9:
             self.user = "Production"
