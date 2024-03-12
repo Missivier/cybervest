@@ -80,6 +80,7 @@ class Application(tk.Tk):
                 self.page_admin_frame.place_forget()
 
             self.bouton_quit.place_forget()
+            self.label_admin.place_forget()
             self.update()
             self.login_page()
 
@@ -495,7 +496,7 @@ class Application(tk.Tk):
 
     def affiche_admin(self):
         self.label_admin = Label(self, text="Menu Admin", font=('Helvetica', 14), bg="#EAF9FF")
-        self.label_admin.place(relx = 0, rely = 0.05)
+        self.label_admin.place(relx = 0.48, rely = 0.9)
 
     def shown_prod_page(self):
         self.page_admin_frame.place_forget()
