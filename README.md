@@ -36,13 +36,16 @@ Pour le déploiement de l'application, il faut: - Python 3
 
 **Installation**
 
-***1. Ouvrir l'invite de commande `Windows + X`***
+***1. Ouvrir l'invite de commande***
+`Windows + X`
 
 ***2. Se rendre dans le répertoire Documents***
 
 ***3. Cloner le projet GitHub***
 
 ***4. Installation des packages PIP***
+
+Dans le terminal, taper la commande `pip install -r requirements.txt`
 
 ***5. Déployer docker***
   1. Rendez-vous sur le lient suivant: "http://localhost:9000/"
