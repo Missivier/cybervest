@@ -387,14 +387,13 @@ class Application(tk.Tk):
             # Utiliser anchor pour centrer le texte
             self.tree.insert("", "end", values=(self.erp.nom_article[i], self.erp.prix_article[i],
                                                 self.erp.reference_interne[i], self.erp.stock_disponible[i]))
-
     def update_stock_log(self):
         # Récupération de la quantité saisie dans la case d'entrée
-        quantite = self.stock_entry_log.get()
+        quantite_str = self.stock_entry.get()
 
         # Assurez-vous que la quantité est un nombre entier
         try:
-            quantite = int(quantite)
+            quantite = int(quantite_str)
         except ValueError:
             messagebox.showerror("Erreur", "Veuillez saisir un nombre entier pour la quantité.")
             return
@@ -402,17 +401,19 @@ class Application(tk.Tk):
         # Obtenez la ligne sélectionnée
         item_selectionne = self.tree.selection()
 
+        # Vérifiez si un élément est sélectionné
         if not item_selectionne:
             messagebox.showerror("Erreur", "Aucune ligne sélectionnée.")
             return
 
-        details_element = self.tree.item(item_selectionne)
-        reference_interne = details_element['values'][2]  # Référence Interne
-        stock_disponible = float(details_element['values'][3])  # Stock Disponible
+        # Accéder aux détails de l'élément sélectionné dans le Treeview
+        details_element = self.tree.item(item_selectionne, 'values')
+        reference_interne = details_element[2]  # Référence Interne
+        stock_disponible = float(details_element[3])  # Stock Disponible
 
         nouvelle_quantite = stock_disponible + quantite
 
-        # Vérifier si la quantité est valide (ex. non négative, pas excessive)
+        # Vérifier si la nouvelle quantité est valide (non négative)
         if nouvelle_quantite < 0:
             messagebox.showerror("Erreur", "La quantité résultante ne peut pas être négative.")
             return
@@ -421,8 +422,8 @@ class Application(tk.Tk):
         self.erp.modifier_stock_odoo(reference_interne, nouvelle_quantite)
 
         # Mettre à jour l'affichage sans ajouter une nouvelle ligne
-        self.tree.item(item_selectionne, values=(details_element['values'][0],
-                                                details_element['values'][1],
+        self.tree.item(item_selectionne, values=(details_element[0],
+                                                details_element[1],
                                                 reference_interne,
                                                 nouvelle_quantite))
 
@@ -430,8 +431,7 @@ class Application(tk.Tk):
         messagebox.showinfo("Mise à jour réussie", f"Le stock de {quantite} unités a été ajouté avec succès pour l'article {reference_interne}.")
 
         # Effacement de la case d'entrée et du bouton Valider après la mise à jour
-        self.stock_entry_log.delete(0, 'end')
-        self.stock_entry_log.insert(0, "")
+        self.stock_entry.delete(0, 'end')
 
     def update_table(self):
             # Effacer les éléments existants dans la Treeview
