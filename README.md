@@ -36,7 +36,7 @@ Pour le déploiement de l'application, il faut: - Python 3
 ## **Installation**
 
 ### ***1. Déployer docker***
-  1. Rendez-vous sur le lient suivant: "http://localhost:9000/"
+  1. Rendez-vous sur [ce lien](http://localhost:9000/)
   2. Sélectionner **Stack** dsans le menu de la liste de gauche
   3. Cliquer sur **AddStack** pour ajouter un stack
   4. Donner un nom ici "odoo70"
@@ -102,13 +102,9 @@ git clone https://github.com/Missivier/cybervest
  ```
 pip install -r requierement_linux.txt
   ```
-  4. Configuration du Lien de Lancement
- ```
-chmod +x /Chemin/De/Votre/Fichier/Launcher_cybervest.sh
-  ```
-  5. Lancement de l'Application
+  4. Lancement de l'Application
 
-Exécutez le lanceur depuis le raccourci bureau et connectez-vous avec vos identifiants ERP.
+Ouvrez le fichier "App.py". Exécutez le code en appuyant sur Run ou F5 et connectez-vous avec vos identifiants ERP.
 
 ### ***4. Installation du Desktop pour Windows***
   1. Configuration du Réseau
@@ -134,13 +130,9 @@ Vérifiez si Python s'est correctement installé en tapant python --version dans
 pip install -r requierement_windows.txt
   ```
 
-  6. Configuration du Lien de Lancement
+  6. Lancement de l'Application
 
-Accédez au dossier cloné, puis créez un raccourci pour "Launcher_cybervest.sh" sur le bureau.
-
-  7. Lancement de l'Application
-
-Exécutez le lanceur depuis le raccourci bureau et connectez-vous avec vos identifiants ERP.
+Ouvrez le fichier "App.py". Exécutez le code en appuyant sur Run ou F5 et connectez-vous avec vos identifiants ERP.
 
 
 
