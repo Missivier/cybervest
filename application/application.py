@@ -143,10 +143,10 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            self.login_frame.place_forget()
-            self.update()
-            self.pageAdmin()
-            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            #self.login_frame.place_forget()
+            #self.update()
+            #self.pageAdmin()
+            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
