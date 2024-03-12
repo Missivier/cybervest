@@ -142,11 +142,7 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            self.login_frame.place_forget()
-            self.update()
-            self.pageLog()
-            print('1')
-            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
@@ -337,7 +333,7 @@ class Application(tk.Tk):
  
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
-        self.validate_stock_button.place(relx=0.50, rely=0.64, anchor='center', relwidth= 0.15)
+        self.validate_stock_button.place(relx=0.503, rely=0.64, anchor='center', relwidth= 0.15)
         
 
         #=================================================================================================================
