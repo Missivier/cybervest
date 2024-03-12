@@ -133,6 +133,7 @@ class Application(tk.Tk):
             self.login_frame.place_forget()
             self.update()
             self.pageLog()
+            print('1')
 
         elif resultat_connexion == 13:
             self.login_frame.place_forget()
@@ -141,7 +142,11 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            self.login_frame.place_forget()
+            self.update()
+            self.pageLog()
+            print('1')
+            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
@@ -186,7 +191,7 @@ class Application(tk.Tk):
         
         # Création du label dans le cadre self.page_prod_frame
         label = Label(self.page_prod_frame, text="Production", font=('Helvetica', 24), bg="#EAF9FF")
-        label.pack(pady=10)
+        label.place(relx = 0.46, rely = 0.05)
         
         # Création de la grille pour afficher les articles
         self.tree = ttk.Treeview(self.page_prod_frame, columns=("Numéro d'OF", "Date", "Quantité réalisé", "Quantité à produire"), show="headings")
@@ -210,14 +215,14 @@ class Application(tk.Tk):
 
         # Ajout de la case d'entrée pour la quantité d'articles à retirer
         self.stock_entry_label_prod = Label(self.page_prod_frame, text="Quantité réalisé")
-        self.stock_entry_label_prod.place(relx=0.5, rely=0.5, anchor='center')
+        self.stock_entry_label_prod.place(relx=0.5, rely=0.6, anchor='center')
  
         self.stock_entry_prod = Entry(self.page_prod_frame)
-        self.stock_entry_prod.place(relx=0.455, rely=0.51)
+        self.stock_entry_prod.place(relx=0.455, rely=0.62)
  
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_prod_frame, text="Valider", command=self.update_stock_prod)
-        self.validate_stock_button.place(relx=0.50, rely=0.56, anchor='center')
+        self.validate_stock_button.place(relx=0.50, rely=0.7, relwidth= 0.15, anchor='center')
 
  
     def affichage_tableau_prod(self):
@@ -312,15 +317,30 @@ class Application(tk.Tk):
 
     def pageLog(self):
         self.Number_page = 2
-        # Supprime les widgets de la page de connexion
-        #self.login_frame.grid_forget()
         
-        self.page_log_frame = tk.Frame(self)
-        self.page_log_frame.place(relx=0.3, rely=0.5, relwidth=0.5, relheight=0.5, bg = None)
+        self.page_log_frame = tk.Frame(self, bg="")
+        self.page_log_frame.place(relx=0, rely=0, relwidth=1, relheight=0.8)
+    
+        #Création d'un bouton pour déconnexion l'application
+        self.bouton_quit = tk.Button(self.page_log_frame, text="Déconnexion", bg="#DAD7D7", font=("Arial", 12), command= self.deconnexion)  
+        self.bouton_quit.place(relx=1, rely=0.05, anchor='se')  # Positionne le bouton en haut à droite
+
+        self.label = Label(self.page_log_frame, text="Logistique", font=('Helvetica', 24), bg="#EAF9FF")
+        self.label.place(relx = 0.46, rely = 0.05)
+        
+        # Ajout de la case d'entrée pour la quantité d'articles à retirer
+        self.stock_entry_label = Label(self.page_log_frame, text="Affectation stock:")
+        self.stock_entry_label.place(relx=0.46, rely=0.6, anchor='center')
  
-        self.label = Label(self.page_log_frame, text="Logistique", font=('Helvetica', 24))
-        self.label.pack(pady=10)
+        self.stock_entry = Entry(self.page_log_frame)
+        self.stock_entry.place(relx=0.535, rely=0.6,anchor='center')
+ 
+        # Ajout du bouton Valider
+        self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
+        self.validate_stock_button.place(relx=0.50, rely=0.64, anchor='center', relwidth= 0.15)
         
+
+        #=================================================================================================================
         # Création de la grille pour afficher les articles
         self.tree = ttk.Treeview(self.page_log_frame, columns=("Nom", "Prix", "Référence Interne", "Stock Disponible"), show="headings")
  
@@ -332,11 +352,11 @@ class Application(tk.Tk):
  
         # Ajout des colonnes avec une largeur augmentée de 50%
         self.tree.column("Nom", width=int(150 * 1.5), anchor="center")
-        self.tree.column("Prix", width=int(100 * 1.5), anchor="center")
-        self.tree.column("Référence Interne", width=int(100 * 1.5), anchor="center")
-        self.tree.column("Stock Disponible", width=int(100 * 1.5), anchor="center")
+        self.tree.column("Prix", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Référence Interne", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Stock Disponible", width=int(150 * 1.5), anchor="center")
  
-        self.tree.pack()
+        self.tree.place(relx=0.27, rely=0.15)
  
         # Appeler la méthode pour obtenir les informations des produits et afficher le tableau
         self.affichage_tableau_log()
@@ -363,16 +383,6 @@ class Application(tk.Tk):
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
         self.validate_stock_button.place(relx=0.50, rely=0.56, anchor='center')
-
-    # Creation et gestion bouton retour
-    #def Bouton_retour(self):
-        #self.Button_retour.place(relx=0, rely=1, anchor="sw")
-    #def Retour(self):
-        #Fonction pour revenir sur le menu admin
-        #self.Button_retour.place_forget()
-        #self.page_prod_frame.place_forget()
-        #self.page_log_frame.place_forget()
-        #self.pageAdmin()
 
     def affichage_tableau_log(self):
         # Utiliser l'instance de la classe ERP
@@ -495,17 +505,7 @@ class Application(tk.Tk):
 #----------------------------------------------------------------------------------------------------
 #     Méthodes gestion des BOUTONS
 #----------------------------------------------------------------------------------------------------
-        
-    def Boutton_retour(self):
-        #Creation bouton pour aller retourner menu admin
-        self.Button_retour = tk.Button(self, text="Retour",fg="black", bg="#DAD7D7", font=("Arial", 20), command=self.Retour)
-        self.Button_retour.place(relx=0.1, rely=0.9, anchor="sw")
- 
-    def Retour(self):
-        #Fonction pour revenir sur le menu admin
-        self.Button_retour.place_forget()
- 
- 
+
     def update_table(self):
         # Effacer les éléments existants dans la Treeview
         for item in self.tree.get_children():
@@ -546,7 +546,7 @@ class Application(tk.Tk):
             # Afficher l'image dans un Label
             image_label = Label(self.page_log_frame, image=img)
             image_label.photo = img
-            image_label.place(relx=0.7, rely=0)
+            image_label.place(relx=0.75, rely=0.1)
  
                 
     def get_article_index_log(self, article_name):
@@ -554,3 +554,5 @@ class Application(tk.Tk):
             if article["name"] == article_name:
                 return i
         return -1  # Retourne -1 si l'article n'est pas trouvé
+    
+        
