@@ -337,7 +337,7 @@ class Application(tk.Tk):
  
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
-        self.validate_stock_button.place(relx=0.50, rely=0.64, anchor='center', relwidth= 0.15)
+        self.validate_stock_button.place(relx=0.503, rely=0.64, anchor='center', relwidth= 0.15)
         
 
         #=================================================================================================================
