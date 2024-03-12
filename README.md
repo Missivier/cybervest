@@ -102,13 +102,9 @@ git clone https://github.com/Missivier/cybervest
  ```
 pip install -r requierement_linux.txt
   ```
-  4. Configuration du Lien de Lancement
- ```
-chmod +x /Chemin/De/Votre/Fichier/Launcher_cybervest.sh
-  ```
-  5. Lancement de l'Application
+  4. Lancement de l'Application
 
-Exécutez le lanceur depuis le raccourci bureau et connectez-vous avec vos identifiants ERP.
+Ouvrez le fichier "App.py". Exécutez le code en appuyant sur Run ou F5 et connectez-vous avec vos identifiants ERP.
 
 ### ***4. Installation du Desktop pour Windows***
   1. Configuration du Réseau
@@ -134,13 +130,9 @@ Vérifiez si Python s'est correctement installé en tapant python --version dans
 pip install -r requierement_windows.txt
   ```
 
-  6. Configuration du Lien de Lancement
+  6. Lancement de l'Application
 
-Accédez au dossier cloné, puis créez un raccourci pour "Launcher_cybervest.sh" sur le bureau.
-
-  7. Lancement de l'Application
-
-Exécutez le lanceur depuis le raccourci bureau et connectez-vous avec vos identifiants ERP.
+Ouvrez le fichier "App.py". Exécutez le code en appuyant sur Run ou F5 et connectez-vous avec vos identifiants ERP.
 
 
 
