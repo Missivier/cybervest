@@ -103,6 +103,8 @@ class Application(tk.Tk):
                 self.page_admin_frame.place_forget()
 
             self.bouton_quit.place_forget()
+            self.button_return.place_forget()
+            self.label_admin.place_forget()
             self.update()
             self.login_page()
 
@@ -165,10 +167,7 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            self.login_frame.place_forget()
-            self.update()
-            self.pageAdmin()
-            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
@@ -518,7 +517,10 @@ class Application(tk.Tk):
 
     def affiche_admin(self):
         self.label_admin = Label(self, text="Menu Admin", font=('Helvetica', 14), bg="#EAF9FF")
-        self.label_admin.place(relx = 0, rely = 0.05)
+        self.label_admin.place(relx = 0.475, rely = 0.9)
+
+        self.button_return = tk.Button(self, text="Retour", font=('Helvetica', 14), bg="#EAF9FF", command= self.returned)
+        self.button_return.place(relx=0.9, rely=0.90, anchor='se')
 
     def shown_prod_page(self):
         self.page_admin_frame.place_forget()
@@ -531,6 +533,18 @@ class Application(tk.Tk):
         self.update()
         self.affiche_admin()
         self.pageLog()
+    
+    def returned(self):
+        if self.Number_page == 1:
+            self.page_prod_frame.place_forget()
+            
+        elif self.Number_page == 2:
+            self.page_log_frame.place_forget()
+
+        self.label_admin.place_forget()    
+        self.button_return.place_forget()
+        self.update()
+        self.pageAdmin()
 
 #----------------------------------------------------------------------------------------------------
 #     Méthodes gestion des BOUTONS
