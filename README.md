@@ -78,6 +78,9 @@ Pour le déploiement de l'application, il faut: - Python 3
          - POSTGRES_USER=odoo
   ```
   7. Cliquer sur **Deploy the stack**
+
+     ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/Deploy%20the%20stack.png)
+
   8. Vos images **Odoo** et **Postgres** doivent passer en **running**
 ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
 
