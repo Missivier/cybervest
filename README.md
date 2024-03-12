@@ -36,7 +36,7 @@ Pour le déploiement de l'application, il faut: - Python 3
 ## **Installation**
 
 ### ***1. Déployer docker***
-  1. Rendez-vous sur le lient suivant: "http://localhost:9000/"
+  1. Rendez-vous sur [ce lien](http://localhost:9000/)
   2. Sélectionner **Stack** dsans le menu de la liste de gauche
   3. Cliquer sur **AddStack** pour ajouter un stack
   4. Donner un nom ici "odoo70"
