@@ -74,6 +74,7 @@ class Application(tk.Tk):
         # Création d'un bouton pour quitter l'application
         bouton_quit = tk.Button(self, text="Quitter", bg="#DAD7D7", font=("Arial", 12), command=self.destroy)
         bouton_quit.place(relx=1, rely=0.90, anchor='se')  # Positionne le bouton en bas à droite
+        
 
         #Afficher La page de login
         self.login_page()
@@ -101,10 +102,11 @@ class Application(tk.Tk):
                 self.page_log_frame.place_forget()
             elif self.Number_page == 3:
                 self.page_admin_frame.place_forget()
+                self.button_return.place_forget()
+                self.label_admin.place_forget()
 
             self.bouton_quit.place_forget()
-            self.button_return.place_forget()
-            self.label_admin.place_forget()
+            self.label_user.place_forget()
             self.update()
             self.login_page()
 
@@ -150,20 +152,25 @@ class Application(tk.Tk):
 
         # Vérifier le résultat de la connexion
         if resultat_connexion == 9:
+            self.user = "Production"
             self.login_frame.place_forget()
             self.update()
             self.pageProd()
+            self.user_current()
 
         elif resultat_connexion == 10:
+            self.user = "Logistique"
             self.login_frame.place_forget()
             self.update()
             self.pageLog()
-            print('1')
+            self.user_current()
 
         elif resultat_connexion == 13:
+            self.user = "Administateur"
             self.login_frame.place_forget()
             self.update()
             self.pageAdmin()
+            self.user_current()
 
         else:
             #Afficher un message d'erreur si l'identification échoue
@@ -599,4 +606,8 @@ class Application(tk.Tk):
                 return i
         return -1  # Retourne -1 si l'article n'est pas trouvé
     
-        
+    def user_current(self):
+        # Création Label de l'utilisateur en cours
+        self.label_user = tk.Label (self, text = "Utilisateur " + self.user)
+        self.label_user.place(relx=0, rely= 0.1)
+          

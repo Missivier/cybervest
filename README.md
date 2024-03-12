@@ -24,7 +24,7 @@ Pour cela, le service informatique a pour but d'intégrer une application pour i
 ![Logo chauffante](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_chauffante.png "Veste Chauffante")
 ![Logo parachute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_parachute.png "Veste Parachute")
 ![Logo refrigeree](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_refrigeree.png "Veste Réfrigérée")
-![Logo astronaute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_astronaute.png "Veste Astronaute")
+![Logo astronaute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_astronaute.png)
 
 ## **Prérequis**
 
@@ -37,11 +37,24 @@ Pour le déploiement de l'application, il faut: - Python 3
 
 ### ***1. Déployer docker***
   1. Rendez-vous sur [ce lien](http://localhost:9000/)
-  2. Sélectionner **Stack** dsans le menu de la liste de gauche
-  3. Cliquer sur **AddStack** pour ajouter un stack
-  4. Donner un nom ici "odoo70"
-  5. Sélectionner **Web editor**
-  6. Copier le fichier "docker-compose.yml" du projet GitHub ou copier le code suivant
+  2. Sélectionner **Stacks** dsans le menu de la liste de gauche
+     
+     ![Image Stack](https://github.com/Missivier/cybervest/blob/main/images/Stacks.png)
+     
+  4. Cliquer sur **AddStack** pour ajouter un stack
+
+     ![Image AddStack](https://github.com/Missivier/cybervest/blob/main/images/Add%20stack.png)
+
+  5. Donner un nom ici "odoo70"
+
+     ![Image odoo70](https://github.com/Missivier/cybervest/blob/main/images/odoo70.png)
+
+
+  6. Sélectionner **Web editor**
+
+     ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/Web%20editor.png)
+     
+  8. Copier le fichier "docker-compose.yml" du projet GitHub ou copier le code suivant
 
 **Code**:
   ```
@@ -65,6 +78,9 @@ Pour le déploiement de l'application, il faut: - Python 3
          - POSTGRES_USER=odoo
   ```
   7. Cliquer sur **Deploy the stack**
+
+     ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/Deploy%20the%20stack.png)
+
   8. Vos images **Odoo** et **Postgres** doivent passer en **running**
 ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
 
