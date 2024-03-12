@@ -82,7 +82,8 @@ Pour le déploiement de l'application, il faut: - Python 3
      ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/Deploy%20the%20stack.png)
 
   8. Vos images **Odoo** et **Postgres** doivent passer en **running**
-![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
+     
+      ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
 
 ### ***2. Installation du Serveur ERP sur une machine virtuelle Linux***
   1. Récupération du Serveur ERP
@@ -91,7 +92,7 @@ git clone https://github.com/Missivier/cybervest
   ```
   2. Accès au Serveur ERP Odoo
 
-Ouvrez le serveur ERP Odoo dans votre navigateur en accédant à ce lien : http://localhost:8069 ou en cliquant sur "8069" dans la colonne "published ports" du Docker fraîchement créé.
+Ouvrez le serveur ERP Odoo dans votre navigateur en accédant à [ce lien](http://localhost:8069/) ou en cliquant sur "8069" dans la colonne "published ports" du Docker fraîchement créé.
 
   3. Restauration de la Base de Données
 
@@ -110,6 +111,8 @@ Déconnectez et reconnectez-vous du réseau WiFi de la machine virtuelle pour ap
 
 Connectez-vous au réseau "afpicfai_wifi_guests" et passez les paramètres réseau de votre VM en mode pont. Redémarrez la VM.
 
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/wifi.png)
+
   2. Récupération du Code
  ```
 git clone https://github.com/Missivier/cybervest
@@ -122,10 +125,15 @@ pip install -r requierement_linux.txt
 
 Ouvrez le fichier "App.py". Exécutez le code en appuyant sur Run ou F5 et connectez-vous avec vos identifiants ERP.
 
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/app.py.png)
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/run.png)
+      
 ### ***4. Installation du Desktop pour Windows***
   1. Configuration du Réseau
 
 Connectez-vous au réseau "afpicfai_wifi_guests" et passez les paramètres réseau de votre VM en mode pont. Redémarrez la VM.
+
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/wifi.png)
 
  2. Installation de Git Bash
     
@@ -149,6 +157,9 @@ pip install -r requierement_windows.txt
   6. Lancement de l'Application
 
 Ouvrez le fichier "App.py". Exécutez le code en appuyant sur Run ou F5 et connectez-vous avec vos identifiants ERP.
+
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/app.py.png)
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/run.png)
 
 
 
