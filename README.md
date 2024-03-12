@@ -1,53 +1,41 @@
- **Master 4 - GROUPE 9**
+# **Master 4 - GROUPE 9**
 
-Projet Application Python (Tkinter)
+## **PROJET**
 
-Entreprise - Cybervest 
+Cybervest évolue vers une organisation industrielle 4.0 en évoluant l'organisation de la production avec la mise en place d'un ERP (Odoo).
+Pour cela, le service informatique a pour but d'intégrer une application pour intéragir avec l'ERP et la BDD. Cybervest est une entreprise de fabrication de veste haut de gamme. Les produits se démarquent par différentes fonctionnalités. 
+
+## **Fonctions demandées**
+
+- Le déploiement de l'ERP Odoo avec sa BDD
+- Création des comptes (Admin, Logistique, Production, Vente/Commercial)
+- Une page logistique avec l'affichage des articles (nom, code, prix, image) et un bouton pour modifier les quantités d'articles en stock
+- Une page production avec l'affichage des OFs (numéro, date, quantité à produire) et un bouton pour modifier les quantités produites 
+- L'accès aux différentes pages est controlé avec une identification avec un user et un mdp
+
+## **Entreprise**
 
 ![Logo UIMM](https://github.com/Missivier/cybervest/blob/main/images/logo-uimm-250x250.jpg)
 ![Logo Cybervest](https://github.com/Missivier/cybervest/blob/main/images/Logo1.png)
 
-Cybervest est une entreprise de fabrication de veste haut de gamme. Les produits se démarquent par différentes fonctionnalités. 
+## **Produits**
 
 ![Logo bouee](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_bouee.png "Veste Bouée")
 ![Logo chauffante](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_chauffante.png "Veste Chauffante")
 ![Logo parachute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_parachute.png "Veste Parachute")
 ![Logo refrigeree](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_refrigeree.png "Veste Réfrigérée")
 
-**PROJET**
 
-Cybervest évolue vers une organisation industrielle 4.0 en évoluant l'organisation de la production avec la mise en place d'un ERP (Odoo).
-Pour cela, le service informatique a pour but d'intégrer une application pour intéragir avec l'ERP et la BDD. 
-
-Fonctions demandées: - le déploiement de l'ERP Odoo avec sa BDD
-                     - création des comptes (Admin, Logistique, Production, Vente/Commercial)
-                     - une page logistique avec l'affichage des articles (nom, code, prix, image) et un bouton pour modifier les quantités d'articles en stock
-                     - une page production avec l'affichage des OFs (numéro, date, quantité à produire) et un bouton pour modifier les quantités produites 
-                     - l'accès aux différentes pages est controlé avec une identification avec un user et un mdp
-
-
-
-**Prérequis**
+## **Prérequis**
 
 Pour le déploiement de l'application, il faut: - Python 3
                                                - Pip 3 (Généralement installé automatiquement avec Python3)
                                                
 
 
-**Installation**
+## **Installation**
 
-***1. Ouvrir l'invite de commande***
-`Windows + X`
-
-***2. Se rendre dans le répertoire Documents***
-
-***3. Cloner le projet GitHub***
-
-***4. Installation des packages PIP***
-
-Dans le terminal, taper la commande `pip install -r requirements.txt`
-
-***5. Déployer docker***
+### ***1. Déployer docker***
   1. Rendez-vous sur le lient suivant: "http://localhost:9000/"
   2. Sélectionner **Stack** dsans le menu de la liste de gauche
   3. Cliquer sur **AddStack** pour ajouter un stack
@@ -79,4 +67,17 @@ Dans le terminal, taper la commande `pip install -r requirements.txt`
   7. Cliquer sur **Deploy the stack**
   8. Vos images **Odoo** et **Postgres** doivent passer en **running**
 ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
+
+
+***1. Ouvrir l'invite de commande***
+`Windows + X`
+
+***2. Se rendre dans le répertoire Documents***
+
+***3. Cloner le projet GitHub***
+
+***4. Installation des packages PIP***
+
+Dans le terminal, taper la commande `pip install -r requirements.txt`
+
 
