@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 from tkinter import Tk, Label, Entry, Button, Frame, ttk
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import Canvas
  
 class Application(tk.Tk):
     #Création de l'environnement
@@ -45,6 +46,12 @@ class Application(tk.Tk):
         # Bloquer le redimensionnement de la fenêtre
         self.resizable(False, False)
 
+        # Initialiser et placer l'indicateur de connexion
+        self.indicateur_connexion_label = Label(self, text="Vérification...", bg='yellow', fg='black', width=25, height=3)
+        self.indicateur_connexion_label.place(relx=0.95, rely=0.85, anchor='ne')
+
+        # Vérifier l'état de la connexion initiale et puis périodiquement
+        self.verifier_connexion_odoo()
         #---------------------------------------------------------------------------------------------------------------
         # Mise en place du logo
         logo_path = "images/Logo1.png"
@@ -71,6 +78,22 @@ class Application(tk.Tk):
         #Afficher La page de login
         self.login_page()
 
+    def verifier_connexion_odoo(self):
+        # Utiliser verifier_disponibilite_odoo pour la vérification initiale
+        if self.erp.verifier_disponibilite_odoo():
+            self.indicateur_connexion_label.config(bg='green', text='Connecté au serveur Odoo')
+        else:
+            self.indicateur_connexion_label.config(bg='red', text='Déconnecté au serveur Odoo')
+
+        # Après la connexion, utiliser est_connecte pour vérifier l'état de la connexion
+        if self.erp.uid and self.erp.est_connecte():
+            self.indicateur_connexion_label.config(bg='green', text='Connecté au serveur Odoo')
+        elif self.erp.uid:
+            self.indicateur_connexion_label.config(bg='red', text='Déconnecté au serveur Odoo')
+
+        # Planifier la prochaine vérification
+        self.after(3000, self.verifier_connexion_odoo)
+        
     def deconnexion(self):
             if self.Number_page == 1:
                 self.page_prod_frame.place_forget()

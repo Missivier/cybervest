@@ -19,7 +19,7 @@ class ERP:
         self.common = xmlrpc.client.ServerProxy(f'{self.odoo_url}/xmlrpc/2/common', allow_none=True)
         self.models = xmlrpc.client.ServerProxy(f'{self.odoo_url}/xmlrpc/2/object', allow_none=True)
         self.uid = 0
- 
+
         self.nom_article = []
         self.prix_article = []
         self.reference_interne = []
@@ -42,7 +42,24 @@ class ERP:
         else:
             print('Échec de la connexion.')
         return self.uid
- 
+    
+    def est_connecte(self):
+        if not self.uid:
+            print("UID non défini, considéré comme déconnecté.")
+            return False
+
+        try:
+            users = self.models.execute_kw(self.db_name, self.uid, self.password, 'res.users', 'read', [self.uid])
+            if users:
+                print(f"Utilisateur connecté : {users}")
+                return True
+            else:
+                print("Aucun utilisateur récupéré.")
+                return False
+        except Exception as e:
+            print(f"Erreur lors de la vérification de la connexion: {e}")
+            return False
+        
     def deconnexion(self):
         if self.uid:
             #self.common.logout(self.db_name, self.uid, self.password)
