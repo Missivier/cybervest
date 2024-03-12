@@ -142,7 +142,10 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            self.login_frame.place_forget()
+            self.update()
+            self.pageAdmin()
+            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
@@ -334,9 +337,7 @@ class Application(tk.Tk):
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
         self.validate_stock_button.place(relx=0.503, rely=0.64, anchor='center', relwidth= 0.15)
-        
 
-        #=================================================================================================================
         # Création de la grille pour afficher les articles
         self.tree = ttk.Treeview(self.page_log_frame, columns=("Nom", "Prix", "Référence Interne", "Stock Disponible"), show="headings")
  
@@ -474,18 +475,39 @@ class Application(tk.Tk):
 #Création de la page Admin
     def pageAdmin(self):
         self.Number_page = 3
-        # Supprime les widgets de la page de connexion
-        self.login_frame.place_forget()
 
-        #Création de la page
-        self.page_admin_frame = tk.Frame(self,bg="#DAD7D7")
-        self.page_admin_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.8)
+        self.page_admin_frame = tk.Frame(self, bg="")
+        self.page_admin_frame.place(relx=0, rely=0, relwidth=1, relheight=0.8)
+    
+        #Création d'un bouton pour déconnexion l'application
+        self.bouton_quit = tk.Button(self.page_admin_frame, text="Déconnexion", bg="#DAD7D7", font=("Arial", 12), command= self.deconnexion)  
+        self.bouton_quit.place(relx=1, rely=0.05, anchor='se')  # Positionne le bouton en haut à droite
+
+        self.label = Label(self.page_admin_frame, text="Menu Admin", font=('Helvetica', 24), bg="#EAF9FF")
+        self.label.place(relx = 0.46, rely = 0.05)
+
         #Creation bouton pour aller page prod
-        self.Button_prod = tk.Button(self.page_admin_frame, text="Production",fg="black", bg="#DAD7D7", font=("Arial", 20), command=lambda: [self.pageProd(), self.Bouton_retour()])
+        self.Button_prod = tk.Button(self.page_admin_frame, text="Production",fg="black", bg="#DAD7D7", font=("Arial", 20), command= self.shown_prod_page)
         self.Button_prod.place(relx=0.3, rely=0.5, anchor="center")
         #Creation bouton pour aller page logistique
-        self.Button_logis = tk.Button(self.page_admin_frame, text="Logistique",fg="black", bg="#DAD7D7", font=("Arial", 20), command=lambda: [self.pageLog(), self.Bouton_retour()])
+        self.Button_logis = tk.Button(self.page_admin_frame, text="Logistique",fg="black", bg="#DAD7D7", font=("Arial", 20), command= self.shown_log_page)
         self.Button_logis.place(relx=0.7, rely=0.5, anchor="center")
+
+    def affiche_admin(self):
+        self.label_admin = Label(self, text="Menu Admin", font=('Helvetica', 14), bg="#EAF9FF")
+        self.label_admin.place(relx = 0, rely = 0.05)
+
+    def shown_prod_page(self):
+        self.page_admin_frame.place_forget()
+        self.update()
+        self.affiche_admin()
+        self.pageProd()
+    
+    def shown_log_page(self):
+        self.page_admin_frame.place_forget()
+        self.update()
+        self.affiche_admin()
+        self.pageLog()
 
 #----------------------------------------------------------------------------------------------------
 #     Méthodes gestion des BOUTONS
