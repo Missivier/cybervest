@@ -372,17 +372,6 @@ class Application(tk.Tk):
         for col in columns:
             self.sort_order[col] = True  # Initialisation à True pour tri ascendant par défaut
             self.tree.heading(col, text=col, command=lambda c=col: self.sort_column_log(c))
-        
-        # Ajout de la case d'entrée pour la quantité d'articles à retirer
-        self.stock_entry_label_log = Label(self.page_log_frame, text="Affectation stock:")
-        self.stock_entry_label_log.place(relx=0.5, rely=0.5, anchor='center')
- 
-        self.stock_entry_log = Entry(self.page_log_frame)
-        self.stock_entry_log.place(relx=0.455, rely=0.51)
- 
-        # Ajout du bouton Valider
-        self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
-        self.validate_stock_button.place(relx=0.50, rely=0.56, anchor='center')
 
     def affichage_tableau_log(self):
         # Utiliser l'instance de la classe ERP
