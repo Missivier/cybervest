@@ -5,6 +5,7 @@ from odoo.ERP import ERP
 from PIL import Image, ImageTk
 from tkinter import Tk, Label, Entry, Button, Frame, ttk
 import tkinter as tk
+from tkinter import messagebox
  
 class Application(tk.Tk):
     #Création de l'environnement
@@ -27,7 +28,7 @@ class Application(tk.Tk):
         #---------------------------------------------------------------------------------------------------------------
             # Fond d'écran
         # Chargement de l'image avec Pillow
-        fond_ecran = "cybervest/images/v915-wit-012.png"
+        fond_ecran = "images/v915-wit-012.png"
         self.image_pil = Image.open(fond_ecran)
         self.image_tk = ImageTk.PhotoImage(self.image_pil)
 
@@ -42,7 +43,7 @@ class Application(tk.Tk):
         self.bind("<Configure>", self.redimensionner_image)
         #---------------------------------------------------------------------------------------------------------------
         # Mise en place du logo
-        logo_path = "cybervest/images/Logo1.png"
+        logo_path = "images/Logo1.png"
         self.image_pil_2 = Image.open(logo_path)
         self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
         self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
@@ -141,39 +142,47 @@ class Application(tk.Tk):
         self.label.pack(pady=10)
  
         # Création de la grille pour afficher les articles
-        self.tree = ttk.Treeview(self.page_prod_frame, columns=("Numéro d'OF", "Date", "Quantité à réaliser", "Quantité en production"), show="headings")
+        self.tree = ttk.Treeview(self.page_prod_frame, columns=("Numéro d'OF", "Date", "Quantité réalisé", "Quantité à produire"), show="headings")
  
         # Configuration des en-têtes de colonnes
         self.tree.heading("Numéro d'OF", text="Numéro d'OF", command=lambda: self.sort_column("Numéro d'OF", False))
         self.tree.heading("Date", text="Date", command=lambda: self.sort_column("Date", False))
-        self.tree.heading("Quantité à réaliser", text="Quantité à réaliser", command=lambda: self.sort_column("Quantité à réaliser", False))
-        self.tree.heading("Quantité en production", text="Quantité en production", command=lambda: self.sort_column("Quantité en production", False))
+        self.tree.heading("Quantité réalisé", text="Quantité réalisé", command=lambda: self.sort_column("Quantité réalisé", False))
+        self.tree.heading("Quantité à produire", text="Quantité à produire", command=lambda: self.sort_column("Quantité à produire", False))
  
         # Ajout des colonnes avec une largeur augmentée de 50%
         self.tree.column("Numéro d'OF", width=int(150 * 1.5), anchor="center")
         self.tree.column("Date", width=int(150 * 1.5), anchor="center")
-        self.tree.column("Quantité en production", width=int(150 * 1.5), anchor="center")
-        self.tree.column("Quantité à réaliser", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Quantité réalisé", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Quantité à produire", width=int(150 * 1.5), anchor="center")
  
         self.tree.pack()
  
+        
         # Appeler la méthode pour obtenir les informations des produits et afficher le tableau
         self.affichage_tableau_prod()
+
+        # Ajout de la case d'entrée pour la quantité d'articles à retirer
+        self.stock_entry_label_prod = Label(self.page_prod_frame, text="Quantité réalisé")
+        self.stock_entry_label_prod.place(relx=0.5, rely=0.5, anchor='center')
  
-        # Ajouter un bouton pour activer la modification du stock
-       # self.modify_stock_button = Button(self, text="Modifier", command=self.modif_stock)
-        #self.modify_stock_button.pack(pady=10)
+        self.stock_entry_prod = Entry(self.page_prod_frame)
+        self.stock_entry_prod.place(relx=0.455, rely=0.51)
+ 
+        # Ajout du bouton Valider
+        self.validate_stock_button = tk.Button(self.page_prod_frame, text="Valider", command=self.update_stock_prod)
+        self.validate_stock_button.place(relx=0.50, rely=0.56, anchor='center')
 
  
     def affichage_tableau_prod(self):
         # Utiliser l'instance de la classe ERP
         self.erp.obtenir_informations_ordres_fabrication()
- 
+        
         # Afficher les valeurs récupérées pour le débogage
         print("OF:", self.erp.ordres_fabrication)
         print("Date ordre fabrication:", self.erp.dates_ordres_fabrication)
-        print("Quantité à produire:", self.erp.quantite_a_produire)
-        print("Quantité en production:", self.erp.qty_producing)
+        print("Quantité réalisé", self.erp.quantite_a_produire)
+        print("Quantité à produire:", self.erp.qty_producing)
  
         # Effacer les éléments existants dans la Treeview
         for item in self.tree.get_children():
@@ -184,7 +193,63 @@ class Application(tk.Tk):
             # Utiliser anchor pour centrer le texte
             self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
                                                 self.erp.qty_producing[i], self.erp.quantite_a_produire[i]))
- 
+
+    def update_stock_prod(self):
+        # Récupération de la quantité saisie dans la case d'entrée
+        quantite = self.stock_entry_prod.get()
+
+        # Assurez-vous que la quantité est un nombre entier
+        try:
+            quantite = int(quantite)
+        except ValueError:
+            messagebox.showerror("Erreur", "Veuillez saisir un nombre entier pour la quantité.")
+            return
+
+        # Obtenez la ligne sélectionnée
+        item_selectionne = self.tree.selection()
+
+        if not item_selectionne:
+            messagebox.showerror("Erreur", "Aucune ligne sélectionnée.")
+            return
+
+        details_element = self.tree.item(item_selectionne)
+        reference_interne = details_element['values'][0]  # Référence Interne
+        qty_prod = float(details_element['values'][2])    # Quantité en production actuelle
+        quantite_a_produire = float(details_element['values'][3])  # Quantité à produire
+
+        nouvelle_quantite = quantite + qty_prod
+
+        # Vérifiez si la quantité saisie est acceptable
+        if nouvelle_quantite > quantite_a_produire:
+            messagebox.showerror("Erreur", "La quantité saisie est supérieure à la quantité à produire.")
+            return
+        elif nouvelle_quantite < 0:
+            messagebox.showerror("Erreur", "Impossible de créer une quantité produite négative.")
+            return
+
+        # Mise à jour du stock dans Odoo seulement si la quantité est correcte
+        self.erp.modifier_quantite_produite(reference_interne, nouvelle_quantite)
+
+        # Mise à jour de l'affichage
+        self.affichage_tableau_prod()
+
+        # Afficher un message de confirmation après la mise à jour réussie
+        if nouvelle_quantite < quantite_a_produire:
+            messagebox.showinfo("Mise à jour réussie", f"{quantite} stock affecté avec succès sur la référence '{reference_interne}'.")
+        elif nouvelle_quantite == quantite_a_produire:
+            messagebox.showinfo("Mise à jour réussie", f"{quantite} stock affecté avec succès sur la référence '{reference_interne}'. Fin de la production sur celle-ci.")
+
+        # Effacement de la case d'entrée et du bouton Valider après la mise à jour
+        self.stock_entry_prod.delete(0, 'end')
+        self.stock_entry_prod.insert(0, "")
+
+        # Mise à jour de la ligne sélectionnée dans le tableau
+        self.tree.item(item_selectionne, values=(
+            details_element['values'][0],  # Numéro d'OF reste inchangé
+            details_element['values'][1],  # Date reste inchangée
+            nouvelle_quantite,             # Quantité en production mise à jour
+            details_element['values'][3])) # Quantité à produire reste inchangée
+
     def update_table_prod(self):
         # Effacer les éléments existants dans la Treeview
         for item in self.tree.get_children():
@@ -229,7 +294,7 @@ class Application(tk.Tk):
  
         # Appeler la méthode pour obtenir les informations des produits et afficher le tableau
         self.affichage_tableau_log()
- 
+
         # Binding de l'événement de clic
         self.tree.bind("<ButtonRelease-1>", self.show_image_log)
  
@@ -243,11 +308,11 @@ class Application(tk.Tk):
             self.tree.heading(col, text=col, command=lambda c=col: self.sort_column_log(c))
         
         # Ajout de la case d'entrée pour la quantité d'articles à retirer
-        self.stock_entry_label = Label(self.page_log_frame, text="Affectation stock:")
-        self.stock_entry_label.place(relx=0.5, rely=0.5, anchor='center')
+        self.stock_entry_label_log = Label(self.page_log_frame, text="Affectation stock:")
+        self.stock_entry_label_log.place(relx=0.5, rely=0.5, anchor='center')
  
-        self.stock_entry = Entry(self.page_log_frame)
-        self.stock_entry.place(relx=0.455, rely=0.51)
+        self.stock_entry_log = Entry(self.page_log_frame)
+        self.stock_entry_log.place(relx=0.455, rely=0.51)
  
         # Ajout du bouton Valider
         self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
@@ -304,77 +369,59 @@ class Application(tk.Tk):
 
     def update_stock_log(self):
         # Récupération de la quantité saisie dans la case d'entrée
-        quantite = self.stock_entry.get()
+        quantite = self.stock_entry_log.get()
 
         # Assurez-vous que la quantité est un nombre entier
         try:
             quantite = int(quantite)
         except ValueError:
-            print("Veuillez saisir un nombre entier pour la quantité.")
+            messagebox.showerror("Erreur", "Veuillez saisir un nombre entier pour la quantité.")
             return
-
-        # Stockage de la nouvelle quantité dans la variable new_stock
-        self.new_stock = quantite
 
         # Obtenez la ligne sélectionnée
         item_selectionne = self.tree.selection()
 
-        details_element = self.tree.item(item_selectionne)
-
-        reference_interne = details_element['values'][2]  # 2 est l'index de la colonne "Référence Interne"
-        stock_selectionne = float(details_element['values'][3])
-    
-        print(reference_interne)
-        print(stock_selectionne)
-
         if not item_selectionne:
-            print("Aucune ligne sélectionnée.")
+            messagebox.showerror("Erreur", "Aucune ligne sélectionnée.")
             return
-        
-        nouvelle_quantite = quantite + stock_selectionne
+
+        details_element = self.tree.item(item_selectionne)
+        reference_interne = details_element['values'][2]  # Référence Interne
+        stock_disponible = float(details_element['values'][3])  # Stock Disponible
+
+        nouvelle_quantite = stock_disponible + quantite
+
+        # Vérifier si la quantité est valide (ex. non négative, pas excessive)
+        if nouvelle_quantite < 0:
+            messagebox.showerror("Erreur", "La quantité résultante ne peut pas être négative.")
+            return
 
         # Mise à jour du stock dans Odoo
         self.erp.modifier_stock_odoo(reference_interne, nouvelle_quantite)
 
-        # Mise à jour de la ligne sélectionnée dans le tableau
-        self.tree.item(item_selectionne, values=(details_element['values'][0], details_element['values'][1], reference_interne, nouvelle_quantite))
+        # Mettre à jour l'affichage sans ajouter une nouvelle ligne
+        self.tree.item(item_selectionne, values=(details_element['values'][0],
+                                                details_element['values'][1],
+                                                reference_interne,
+                                                nouvelle_quantite))
+
+        # Afficher un message de confirmation après la mise à jour réussie
+        messagebox.showinfo("Mise à jour réussie", f"Le stock de {quantite} unités a été ajouté avec succès pour l'article {reference_interne}.")
 
         # Effacement de la case d'entrée et du bouton Valider après la mise à jour
-        self.stock_entry.delete(0, 'end')
-        self.stock_entry.insert(0, "")
+        self.stock_entry_log.delete(0, 'end')
+        self.stock_entry_log.insert(0, "")
 
-        
-
-    def affichage_tableau_prod(self):
-        # Utiliser l'instance de la classe ERP
-        self.erp.obtenir_informations_ordres_fabrication()
- 
-        # Afficher les valeurs récupérées pour le débogage
-        print("Ordre fabrication:", self.erp.ordres_fabrication)
-        print("Date ordre fabrication:", self.erp.dates_ordres_fabrication)
-        print("Quantité à produire:", self.erp.quantite_a_produire)
-        print("Quantité en production:", self.erp.qty_producing)
- 
-        # Effacer les éléments existants dans la Treeview
-        for item in self.tree.get_children():
-            self.tree.delete(item)
- 
-        # Ajouter les nouvelles données obtenues à la Treeview
-        for i in range(len(self.erp.ordres_fabrication)):
-            # Utiliser anchor pour centrer le texte
-            self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
-                                                self.erp.qty_producing[i], self.erp.quantite_a_produire[i]))
- 
     def update_table(self):
-        # Effacer les éléments existants dans la Treeview
-        for item in self.tree.get_children():
-            self.tree.delete(item)
- 
-        # Ajouter les nouvelles données obtenues à la Treeview après mise à jour
-        for i in range(len(self.erp_instance.ordres_fabrication)):
-            self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
-                                                self.erp.quantite_a_produire[i], self.erp.qty_producing[i]))
- 
+            # Effacer les éléments existants dans la Treeview
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+    
+            # Ajouter les nouvelles données obtenues à la Treeview après mise à jour
+            for i in range(len(self.erp_instance.ordres_fabrication)):
+                self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
+                                                    self.erp.quantite_a_produire[i], self.erp.qty_producing[i]))
+    
     def sort_column_log(self, col):
         # Obtenez l'état actuel du tri pour la colonne spécifiée
         reverse = self.sort_order[col]
@@ -398,43 +445,6 @@ class Application(tk.Tk):
         for item in data:
             self.tree.insert("", "end", values=item)
    
-    def update_stock_prod(self):
-        # Récupération de la quantité saisie dans la case d'entrée
-        quantite = self.stock_entry.get()
-
-        # Assurez-vous que la quantité est un nombre entier
-        try:
-            quantite = int(quantite)
-        except ValueError:
-            print("Veuillez saisir un nombre entier pour la quantité.")
-            return
-
-        # Stockage de la nouvelle quantité dans la variable new_stock
-        self.new_stock = quantite
-
-        # Obtenez la ligne sélectionnée
-        item_selectionne = self.tree.selection()
-
-        if not item_selectionne:
-            print("Aucune ligne sélectionnée.")
-            return
-
-        # Obtenez le nom de l'article associé à la ligne sélectionnée
-        nom_article = self.tree.item(item_selectionne, "values")[0]
-
-        # Mise à jour du stock dans Odoo
-        succes = self.erp.update_odoo_stock(nom_article, quantite)
-
-        if succes:
-            # Affichage d'un message de confirmation dans le terminal
-            print(f"Stock de {quantite} articles de '{nom_article}' mis à jour avec succès dans Odoo.")
-        else:
-            # En cas d'échec de la mise à jour dans Odoo
-            print(f"Échec de la mise à jour du stock pour '{nom_article}' dans Odoo.")
-
-        # Effacement de la case d'entrée et du bouton Valider après la mise à jour
-        self.stock_entry.delete(0, 'end')
- 
 
 #----------------------------------------------------------------------------------------------------
 #     Méthodes page ADMIN
