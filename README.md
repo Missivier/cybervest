@@ -24,7 +24,7 @@ Pour cela, le service informatique a pour but d'intégrer une application pour i
 ![Logo chauffante](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_chauffante.png "Veste Chauffante")
 ![Logo parachute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_parachute.png "Veste Parachute")
 ![Logo refrigeree](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_refrigeree.png "Veste Réfrigérée")
-![Logo astronaute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_astronaute.png "Veste Astronaute")
+![Logo astronaute](https://github.com/Missivier/cybervest/blob/main/images/veste_astronaute.png)
 
 ## **Prérequis**
 
