@@ -102,8 +102,8 @@ class Application(tk.Tk):
                 self.page_log_frame.place_forget()
             elif self.Number_page == 3:
                 self.page_admin_frame.place_forget()
-                self.button_return.place_forget()
-                self.label_admin.place_forget()
+                #self.button_return.place_forget()
+                #self.label_admin.place_forget()
 
             self.bouton_quit.place_forget()
             self.label_user.place_forget()
