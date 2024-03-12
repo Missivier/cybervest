@@ -43,23 +43,34 @@ class ERP:
             print('Échec de la connexion.')
         return self.uid
     
-    def est_connecte(self):
-        if not self.uid:
-            print("UID non défini, considéré comme déconnecté.")
+    def connexion(self, username=None, password=None):
+        self.uid = self.common.authenticate(self.db_name, username, password, {})
+        if self.uid:
+            print('Connexion réussie. UID utilisateur:', self.uid)
+            self.password = password
+        else:
+            print('Échec de la connexion.')
+
+    def verifier_disponibilite_odoo(self):
+        try:
+            version = self.common.version()
+            print(f"Odoo version = {version}")
+            return True if version else False
+        except Exception as e:
+            print(f"Impossible de récupérer la version d'Odoo: {e}")
             return False
 
-        try:
-            users = self.models.execute_kw(self.db_name, self.uid, self.password, 'res.users', 'read', [self.uid])
-            if users:
-                print(f"Utilisateur connecté : {users}")
-                return True
-            else:
-                print("Aucun utilisateur récupéré.")
-                return False
-        except Exception as e:
-            print(f"Erreur lors de la vérification de la connexion: {e}")
+    def est_connecte(self):
+        if not self.uid:
             return False
         
+        try:
+            # Cette opération tente de lire l'utilisateur courant à partir de l'UID
+            self.models.execute_kw(self.db_name, self.uid, self.password, 'res.users', 'read', [self.uid])
+            return True
+        except Exception:
+            return False
+
     def deconnexion(self):
         if self.uid:
             #self.common.logout(self.db_name, self.uid, self.password)
