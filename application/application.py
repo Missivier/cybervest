@@ -75,6 +75,21 @@ class Application(tk.Tk):
         #Afficher La page de login
         self.login_page()
 
+        # Création et fonction bouton déco
+    def show_button_deconnexion(client):
+        client.Button_deco = tk.Button(client,text="Déconnexion", bg="#DAD7D7", font=("Arial", 12), command= client.deconnexion)
+        client.Button_deco.place(relx=0.935, rely=0.03)
+
+    def deconnexion(client):
+
+        client.Button_deco.destroy()        
+        #client.Button_retour.place_forget()
+        client.page_prod_frame.destroy()
+        #client.page_log_frame.place_forget()
+        #client.pageAdmin()
+
+        client.login_page()
+        print("1")
 
     def redimensionner_image(self, event):
         nouvelle_largeur = self.winfo_width()
@@ -117,12 +132,14 @@ class Application(tk.Tk):
         password = client.entry_password.get()
 
         # Connexion avec les informations fournies
-        resultat_connexion = client.erp.connexion(username, password)
+        resultat_connexion = 9#client.erp.connexion(username, password)
 
         # Vérifier le résultat de la connexion
         if resultat_connexion == 9:
             client.pageProd()
+            client.show_button_deconnexion()
             client.login_frame.destroy()
+
         elif resultat_connexion == 10:
             client.pageLog()
             client.login_frame.destroy()
@@ -138,6 +155,7 @@ class Application(tk.Tk):
 
     #Création de la page login
     def login_page(client):
+        client.Number_page = 2
         # Création de la frame pour la page login
         client.login_frame = tk.Frame(client, bg="#c2bebd")
         client.login_frame.place(relx=0.5, rely=0.3, relwidth=0.2, relheight=0.2, anchor="center")
@@ -171,7 +189,7 @@ class Application(tk.Tk):
         client.page_prod_frame = tk.Frame(client,bg= "")
         client.page_prod_frame.place(relx=0.25, rely=0.1, relwidth=0.5, relheight=0.6)
          
-        label = Label(client.page_prod_frame, text="Production", font=('Helvetica', 24), bg=client.page_prod_frame['bg'])
+        label = Label(client.page_prod_frame, text="Production", font=('Helvetica', 24), bg = "#EAF9FF")
         label.pack(pady=10)
  
         # Création de la grille pour afficher les articles
@@ -296,26 +314,7 @@ class Application(tk.Tk):
         self.page_prod_frame.place_forget()
         self.page_log_frame.place_forget()
         self.pageAdmin()
-
-    # Création et fonction bouton déco
-    def show_button_deconnexion(self):
-        self.Button_deco.place(relx=0.92, rely=0.03)
-
-    def deconnexion(self):
-        if self.Number_page == 1:
-            self.page_admin_frame.place_forget()
-        elif self.Number_page == 2:
-            self.page_prod_frame.place_forget()
-        elif  self.Number_page == 3:     
-            self.page_log_frame.place_forget() 
-
-        self.Button_deco.place_forget()        
-        self.Button_retour.place_forget()
-        self.page_prod_frame.place_forget()
-        self.page_log_frame.place_forget()
-        self.pageAdmin()
-
-        self.login_page()
+        
 
     def affichage_tableau_log(self):
         # Utiliser l'instance de la classe ERP
@@ -475,20 +474,20 @@ class Application(tk.Tk):
 #----------------------------------------------------------------------------------------------------
         
 #Création de la page Admin
-    def pageAdmin(self):
-        #self.Number_page = 1
+    def pageAdmin(client):
+        client.Number_page = 1
         # Supprime les widgets de la page de connexion
-        self.login_frame.place_forget()
+        client.login_frame.place_forget()
 
         #Création de la page
-        self.page_admin_frame = tk.Frame(self,bg="#DAD7D7")
-        self.page_admin_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.8)
+        client.page_admin_frame = tk.Frame(client,bg="#DAD7D7")
+        client.page_admin_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.8)
         #Creation bouton pour aller page prod
-        self.Button_prod = tk.Button(self.page_admin_frame, text="Production",fg="black", bg="#DAD7D7", font=("Arial", 20), command=lambda: [self.pageProd(), self.Bouton_retour()])
-        self.Button_prod.place(relx=0.3, rely=0.5, anchor="center")
+        client.Button_prod = tk.Button(client.page_admin_frame, text="Production",fg="black", bg="#DAD7D7", font=("Arial", 20), command=lambda: [client.pageProd(), client.Bouton_retour()])
+        client.Button_prod.place(relx=0.3, rely=0.5, anchor="center")
         #Creation bouton pour aller page logistique
-        self.Button_logis = tk.Button(self.page_admin_frame, text="Logistique",fg="black", bg="#DAD7D7", font=("Arial", 20), command=lambda: [self.pageLog(), self.Bouton_retour()])
-        self.Button_logis.place(relx=0.7, rely=0.5, anchor="center")
+        client.Button_logis = tk.Button(client.page_admin_frame, text="Logistique",fg="black", bg="#DAD7D7", font=("Arial", 20), command=lambda: [client.pageLog(), client.Bouton_retour()])
+        client.Button_logis.place(relx=0.7, rely=0.5, anchor="center")
 
 #----------------------------------------------------------------------------------------------------
 #     Méthodes gestion des BOUTONS
