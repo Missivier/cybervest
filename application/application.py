@@ -102,8 +102,11 @@ class Application(tk.Tk):
                 self.page_log_frame.place_forget()
             elif self.Number_page == 3:
                 self.page_admin_frame.place_forget()
-                #self.button_return.place_forget()
-                #self.label_admin.place_forget()
+
+            if self.activated_admin == 1:
+                self.button_return.place_forget()
+                self.label_admin.place_forget()
+                self.activated_admin = 0
 
             self.bouton_quit.place_forget()
             self.label_user.place_forget()
@@ -174,7 +177,12 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            self.user = "Administateur"
+            self.login_frame.place_forget()
+            self.update()
+            self.pageAdmin()
+            self.user_current()
+            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
@@ -504,6 +512,7 @@ class Application(tk.Tk):
 #Création de la page Admin
     def pageAdmin(self):
         self.Number_page = 3
+        self.activated_admin = 1
 
         self.page_admin_frame = tk.Frame(self, bg="")
         self.page_admin_frame.place(relx=0, rely=0, relwidth=1, relheight=0.8)
@@ -529,6 +538,8 @@ class Application(tk.Tk):
         self.button_return = tk.Button(self, text="Retour", font=('Helvetica', 14), bg="#EAF9FF", command= self.returned)
         self.button_return.place(relx=0.9, rely=0.90, anchor='se')
 
+        self.activated_admin = 1
+
     def shown_prod_page(self):
         self.page_admin_frame.place_forget()
         self.update()
@@ -548,6 +559,7 @@ class Application(tk.Tk):
         elif self.Number_page == 2:
             self.page_log_frame.place_forget()
 
+        self.activated_admin = 0
         self.label_admin.place_forget()    
         self.button_return.place_forget()
         self.update()
