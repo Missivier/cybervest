@@ -20,10 +20,6 @@ class ERP:
         self.models = xmlrpc.client.ServerProxy(f'{self.odoo_url}/xmlrpc/2/object', allow_none=True)
         self.uid = 0
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d2f3d03816f186b5f33df494c19cb0df56c68bb9
         self.nom_article = []
         self.prix_article = []
         self.reference_interne = []
