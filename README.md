@@ -94,15 +94,21 @@ git clone https://github.com/Missivier/cybervest
 
 Ouvrez le serveur ERP Odoo dans votre navigateur en accédant à [ce lien](http://localhost:8069/) ou en cliquant sur "8069" dans la colonne "published ports" du Docker fraîchement créé.
 
+  ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/8069.png)
+
   3. Restauration de la Base de Données
 
-Sur le site, accédez à "Gestion des bases de données" puis sélectionnez "Restore Database".
-Entrez le mot de passe principal (MSIR5), parcourez et sélectionnez le fichier .ZIP téléchargé dans le même répertoire que le référentiel cloné.
-Nommez votre base de données "cybervest".
+Cliquer sur restore data base 
 
-  4. Configuration de l'Adresse IP
+  ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/restore%20database.png)
 
-Changez l'adresse IP de votre machine virtuelle hébergeant le Docker en 172.31.11.241.
+Entrez le mot de passe principal (jslpdl), parcourez et sélectionnez le fichier .ZIP téléchargé dans le même répertoire que le référentiel cloné.
+Nommez votre base de données "db_cybervest".
+
+  ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/zip.png)
+
+  4. Modification du réglage reseau (VM)
+
 Modifiez les paramètres réseau pour passer en mode pont.
 Déconnectez et reconnectez-vous du réseau WiFi de la machine virtuelle pour appliquer les modifications.
 
