@@ -43,7 +43,6 @@ class ERP:
         else:
             print('Échec de la connexion.')
         return self.uid
-    
 
     def verifier_disponibilite_odoo(self):
         try:

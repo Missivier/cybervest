@@ -22,6 +22,7 @@ class Application(tk.Tk):
 
         self.entry_username = tk.StringVar()
         self.entry_password = tk.StringVar()
+        self.activated_admin = 0
 
         #Creation de la page self
         self.title("Application CyberVest")#Titre
@@ -47,8 +48,10 @@ class Application(tk.Tk):
         self.resizable(False, False)
 
         # Initialiser et placer l'indicateur de connexion
-        self.indicateur_connexion_label = Label(self, text="Vérification...", bg='yellow', fg='black', width=25, height=3)
-        self.indicateur_connexion_label.place(relx=0.95, rely=0.85, anchor='ne')
+        self.indicateur_connexion_label = Label(self, bg='yellow', fg='black', width=2, height=1)
+        self.indicateur_connexion_label.place(relx=0.10, rely=0.01)
+        self.text_connexion = tk.Label(self,bg='#296589', text="Etat de la connection: ", width=20, height=1)
+        self.text_connexion.place(relx=0.01, rely=0.01)
 
         # Vérifier l'état de la connexion initiale et puis périodiquement
         self.verifier_connexion_odoo()
@@ -82,15 +85,16 @@ class Application(tk.Tk):
     def verifier_connexion_odoo(self):
         # Utiliser verifier_disponibilite_odoo pour la vérification initiale
         if self.erp.verifier_disponibilite_odoo():
-            self.indicateur_connexion_label.config(bg='green', text='Connecté au serveur Odoo')
+           self.indicateur_connexion_label.config(bg='green')
         else:
-            self.indicateur_connexion_label.config(bg='red', text='Déconnecté au serveur Odoo')
+            self.indicateur_connexion_label.config(bg='red')
 
         # Après la connexion, utiliser est_connecte pour vérifier l'état de la connexion
         if self.erp.uid and self.erp.est_connecte():
-            self.indicateur_connexion_label.config(bg='green', text='Connecté au serveur Odoo')
+            self.indicateur_connexion_label.config(bg='green')
+
         elif self.erp.uid:
-            self.indicateur_connexion_label.config(bg='red', text='Déconnecté au serveur Odoo')
+            self.indicateur_connexion_label.config(bg='red')
 
         # Planifier la prochaine vérification
         self.after(3000, self.verifier_connexion_odoo)
@@ -102,8 +106,11 @@ class Application(tk.Tk):
                 self.page_log_frame.place_forget()
             elif self.Number_page == 3:
                 self.page_admin_frame.place_forget()
+
+            if self.activated_admin == 1:
                 self.button_return.place_forget()
                 self.label_admin.place_forget()
+                self.activated_admin = 0
 
             self.bouton_quit.place_forget()
             self.label_user.place_forget()
@@ -149,7 +156,7 @@ class Application(tk.Tk):
 
         # Connexion avec les informations fournies
         resultat_connexion = self.erp.connexion(username, password)
-
+        #resultat_connexion = 0
         # Vérifier le résultat de la connexion
         if resultat_connexion == 9:
             self.user = "Production"
@@ -174,7 +181,12 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            self.user = "Administateur"
+            self.login_frame.place_forget()
+            self.update()
+            self.pageAdmin()
+            self.user_current()
+            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
@@ -529,6 +541,8 @@ class Application(tk.Tk):
         self.button_return = tk.Button(self, text="Retour", font=('Helvetica', 14), bg="#EAF9FF", command= self.returned)
         self.button_return.place(relx=0.9, rely=0.90, anchor='se')
 
+        self.activated_admin = 1
+
     def shown_prod_page(self):
         self.page_admin_frame.place_forget()
         self.update()
@@ -548,6 +562,7 @@ class Application(tk.Tk):
         elif self.Number_page == 2:
             self.page_log_frame.place_forget()
 
+        self.activated_admin = 0
         self.label_admin.place_forget()    
         self.button_return.place_forget()
         self.update()
@@ -608,6 +623,6 @@ class Application(tk.Tk):
     
     def user_current(self):
         # Création Label de l'utilisateur en cours
-        self.label_user = tk.Label (self, text = "Utilisateur " + self.user)
+        self.label_user = tk.Label (self, text = "Utilisateur : " + self.user)
         self.label_user.place(relx=0, rely= 0.1)
           
