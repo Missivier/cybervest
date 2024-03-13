@@ -68,7 +68,7 @@ class Application(tk.Tk):
         self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
         self.iconphoto(True, self.image_tk_2)
         # Mise en place du logo UIMM
-        logo_path_2 = "cybervest/images/logo-uimm-250x250.jpg"
+        logo_path_2 = "images/logo-uimm-250x250.jpg"
         self.image_pil_3 = Image.open(logo_path_2)
         self.image_tk_3 = ImageTk.PhotoImage(self.image_pil_3)
         self.canvas_logo_2 = tk.Canvas(client, width=self.image_tk_3.width(), height=self.image_tk_3.height())
