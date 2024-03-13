@@ -107,9 +107,8 @@ Nommez votre base de données "db_cybervest".
 
   ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/zip.png)
 
-  4. Configuration de l'Adresse IP
+  4. Modification du réglage reseau (VM)
 
-Changez l'adresse IP de votre machine virtuelle hébergeant le Docker en 172.31.11.241.
 Modifiez les paramètres réseau pour passer en mode pont.
 Déconnectez et reconnectez-vous du réseau WiFi de la machine virtuelle pour appliquer les modifications.
 
