@@ -181,12 +181,7 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            self.user = "Administateur"
-            self.login_frame.place_forget()
-            self.update()
-            self.pageAdmin()
-            self.user_current()
-            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
@@ -624,5 +619,5 @@ class Application(tk.Tk):
     def user_current(self):
         # Création Label de l'utilisateur en cours
         self.label_user = tk.Label (self, text = "Utilisateur : " + self.user)
-        self.label_user.place(relx=0, rely= 0.1)
+        self.label_user.place(relx=0, rely= 0.05)
           
