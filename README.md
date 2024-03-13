@@ -1,59 +1,60 @@
- **Master 4 - GROUPE 9**
+# **Master 4 - GROUPE 9**
 
-Projet Application Python (Tkinter)
+## **PROJET**
 
-Entreprise - Cybervest 
+Cybervest évolue vers une organisation industrielle 4.0 en évoluant l'organisation de la production avec la mise en place d'un ERP (Odoo).
+Pour cela, le service informatique a pour but d'intégrer une application pour intéragir avec l'ERP et la BDD. Cybervest est une entreprise de fabrication de veste haut de gamme. Les produits se démarquent par différentes fonctionnalités. 
+
+## **Fonctions demandées**
+
+- Le déploiement de l'ERP Odoo avec sa BDD
+- Création des comptes (Admin, Logistique, Production, Vente/Commercial)
+- Une page logistique avec l'affichage des articles (nom, code, prix, image) et un bouton pour modifier les quantités d'articles en stock
+- Une page production avec l'affichage des OFs (numéro, date, quantité à produire) et un bouton pour modifier les quantités produites 
+- L'accès aux différentes pages est controlé avec une identification avec un user et un mdp
+
+## **Entreprise**
 
 ![Logo UIMM](https://github.com/Missivier/cybervest/blob/main/images/logo-uimm-250x250.jpg)
 ![Logo Cybervest](https://github.com/Missivier/cybervest/blob/main/images/Logo1.png)
 
-Cybervest est une entreprise de fabrication de veste haut de gamme. Les produits se démarquent par différentes fonctionnalités. 
+## **Produits**
 
 ![Logo bouee](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_bouee.png "Veste Bouée")
 ![Logo chauffante](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_chauffante.png "Veste Chauffante")
 ![Logo parachute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_parachute.png "Veste Parachute")
 ![Logo refrigeree](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_refrigeree.png "Veste Réfrigérée")
+![Logo astronaute](https://github.com/Missivier/cybervest/blob/main/images/Vestes/veste_astronaute.png)
 
-**PROJET**
-
-Cybervest évolue vers une organisation industrielle 4.0 en évoluant l'organisation de la production avec la mise en place d'un ERP (Odoo).
-Pour cela, le service informatique a pour but d'intégrer une application pour intéragir avec l'ERP et la BDD. 
-
-Fonctions demandées: - le déploiement de l'ERP Odoo avec sa BDD
-                     - création des comptes (Admin, Logistique, Production, Vente/Commercial)
-                     - une page logistique avec l'affichage des articles (nom, code, prix, image) et un bouton pour modifier les quantités d'articles en stock
-                     - une page production avec l'affichage des OFs (numéro, date, quantité à produire) et un bouton pour modifier les quantités produites 
-                     - l'accès aux différentes pages est controlé avec une identification avec un user et un mdp
-
-
-
-**Prérequis**
+## **Prérequis**
 
 Pour le déploiement de l'application, il faut: - Python 3
                                                - Pip 3 (Généralement installé automatiquement avec Python3)
                                                
 
 
-**Installation**
+## **Installation**
 
-***1. Ouvrir l'invite de commande***
-`Windows + X`
+### ***1. Déployer docker***
+  1. Rendez-vous sur [ce lien](http://localhost:9000/)
+  2. Sélectionner **Stacks** dsans le menu de la liste de gauche
+     
+     ![Image Stack](https://github.com/Missivier/cybervest/blob/main/images/Stacks.png)
+     
+  4. Cliquer sur **AddStack** pour ajouter un stack
 
-***2. Se rendre dans le répertoire Documents***
+     ![Image AddStack](https://github.com/Missivier/cybervest/blob/main/images/Add%20stack.png)
 
-***3. Cloner le projet GitHub***
+  5. Donner un nom ici "odoo70"
 
-***4. Installation des packages PIP***
+     ![Image odoo70](https://github.com/Missivier/cybervest/blob/main/images/odoo70.png)
 
-Dans le terminal, taper la commande `pip install -r requirements.txt`
 
-***5. Déployer docker***
-  1. Rendez-vous sur le lient suivant: "http://localhost:9000/"
-  2. Sélectionner **Stack** dsans le menu de la liste de gauche
-  3. Cliquer sur **AddStack** pour ajouter un stack
-  4. Donner un nom ici "odoo70"
-  5. Sélectionner **Web editor**
-  6. Copier le fichier "docker-compose.yml" du projet GitHub ou copier le code suivant
+  6. Sélectionner **Web editor**
+
+     ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/Web%20editor.png)
+     
+  8. Copier le fichier "docker-compose.yml" du projet GitHub ou copier le code suivant
 
 **Code**:
   ```
@@ -76,6 +77,111 @@ Dans le terminal, taper la commande `pip install -r requirements.txt`
          - POSTGRES_PASSWORD=myodoo
          - POSTGRES_USER=odoo
   ```
+  7. Cliquer sur **Deploy the stack**
+
+     ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/Deploy%20the%20stack.png)
+
+  8. Vos images **Odoo** et **Postgres** doivent passer en **running**
+     
+      ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
+
+### ***2. Installation du Serveur ERP sur une machine virtuelle Linux***
+  1. Récupération du Serveur ERP
+ ```
+git clone https://github.com/Missivier/cybervest
+  ```
+  2. Accès au Serveur ERP Odoo
+
+Ouvrez le serveur ERP Odoo dans votre navigateur en accédant à [ce lien](http://localhost:8069/) ou en cliquant sur "8069" dans la colonne "published ports" du Docker fraîchement créé.
+
+  3. Restauration de la Base de Données
+
+Sur le site, accédez à "Gestion des bases de données" puis sélectionnez "Restore Database".
+Entrez le mot de passe principal (MSIR5), parcourez et sélectionnez le fichier .ZIP téléchargé dans le même répertoire que le référentiel cloné.
+Nommez votre base de données "cybervest".
+
+  4. Configuration de l'Adresse IP
+
+Changez l'adresse IP de votre machine virtuelle hébergeant le Docker en 172.31.11.241.
+Modifiez les paramètres réseau pour passer en mode pont.
+Déconnectez et reconnectez-vous du réseau WiFi de la machine virtuelle pour appliquer les modifications.
+
+### ***3. Installation du Desktop sur Linux***
+  1. Configuration du Réseau
+
+Connectez-vous au réseau "afpicfai_wifi_guests" et passez les paramètres réseau de votre VM en mode pont. Redémarrez la VM.
+
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/wifi.png)
+
+  2. Récupération du Code
+ ```
+git clone https://github.com/Missivier/cybervest
+  ```
+  3. Installation des Dépendances
+ ```
+pip install -r requierement_linux.txt
+  ```
+  4. Lancement de l'Application
+
+Ouvrez le fichier "App.py". Exécutez le code en appuyant sur Run ou F5 et connectez-vous avec vos identifiants ERP.
+
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/app.py.png)
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/run.png)
+      
+### ***4. Installation du Desktop pour Windows***
+  1. Configuration du Réseau
+
+Connectez-vous au réseau "afpicfai_wifi_guests" et passez les paramètres réseau de votre VM en mode pont. Redémarrez la VM.
+
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/wifi.png)
+
+ 2. Installation de Git Bash
+    
+Téléchargez et installez Git Bach depuis [ce lien](https://git-scm.com/download/win) en sélectionnant "64-bit Git for Windows Setup".
+
+  3. Récupération du Code
+ ```
+git clone https://github.com/Missivier/cybervest
+  ```
+
+  4. Installation de Python
+
+Installez Python en ouvrant l'invite de commande et en tapant python3. Suivez les instructions pour installer à partir du Microsoft Store.
+Vérifiez si Python s'est correctement installé en tapant python --version dans l'invite de commande.
+
+  5. Installation des Dépendances
+ ```
+pip install -r requierement_windows.txt
+  ```
+
+  6. Lancement de l'Application
+
+Ouvrez le fichier "App.py". Exécutez le code en appuyant sur Run ou F5 et connectez-vous avec vos identifiants ERP.
+
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/app.py.png)
+   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/run.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

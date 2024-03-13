@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 from tkinter import Tk, Label, Entry, Button, Frame, ttk
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import Canvas
  
 class Application(tk.Tk):
     #Création de l'environnement
@@ -21,8 +22,9 @@ class Application(tk.Tk):
 
         self.entry_username = tk.StringVar()
         self.entry_password = tk.StringVar()
+        self.activated_admin = 0
 
-        #Creation de la page Client
+        #Creation de la page self
         self.title("Application CyberVest")#Titre
         self.screen_width = self.winfo_screenwidth()#Largeur fenetre
         self.screen_height = self.winfo_screenheight()#Longueur fenetre
@@ -39,50 +41,78 @@ class Application(tk.Tk):
         self.canvas_FD.pack(fill=tk.BOTH, expand=True)
         self.canvas_FD.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
 
-        # Création du frame client
-        client = tk.Frame(self.canvas_FD, bg="", width=self.screen_width, height=self.screen_height)
-        client.place(relx=0, rely=0)
-
         # Associer la fonction de redimensionnement à l'événement de redimensionnement de la fenêtre
         self.bind("<Configure>", self.redimensionner_image)
 
         # Bloquer le redimensionnement de la fenêtre
         self.resizable(False, False)
 
-        #---------------------------------------------------------------------------------------------------------------
-        # Mise en place du logo cybervest
-        logo_path = "images/Logo1.png"
-        self.image_pil_2 = Image.open(logo_path)
-        self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
-        self.canvas_logo = tk.Canvas(client, width=self.image_tk_2.width(), height=self.image_tk_2.height())
-        self.canvas_logo.place(relx=0.03, rely=0.85, anchor='center')
-        self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
-        self.iconphoto(True, self.image_tk_2)
+        # Initialiser et placer l'indicateur de connexion
+        self.indicateur_connexion_label = Label(self, text="Vérification...", bg='yellow', fg='black', width=25, height=3)
+        self.indicateur_connexion_label.place(relx=0.95, rely=0.85, anchor='ne')
 
-        # Mise en place du logo cybervest
+        # Vérifier l'état de la connexion initiale et puis périodiquement
+        self.verifier_connexion_odoo()
+        #---------------------------------------------------------------------------------------------------------------
+        # Mise en place du logo
         logo_path = "images/Logo1.png"
         self.image_pil_2 = Image.open(logo_path)
         self.image_tk_2 = ImageTk.PhotoImage(self.image_pil_2)
         self.canvas_logo = tk.Canvas(self, width=self.image_tk_2.width(), height=self.image_tk_2.height())
-        self.canvas_logo.place(relx=0.05, rely=0.85, anchor='center')
+        self.canvas_logo.place(relx=0.03, rely=0.85, anchor='center')
         self.canvas_logo.create_image(0, 0, anchor=tk.NW, image=self.image_tk_2)
         self.iconphoto(True, self.image_tk_2)
+
         # Mise en place du logo UIMM
         logo_path_2 = "images/logo-uimm-250x250.jpg"
         self.image_pil_3 = Image.open(logo_path_2)
         self.image_tk_3 = ImageTk.PhotoImage(self.image_pil_3)
-        self.canvas_logo_2 = tk.Canvas(client, width=self.image_tk_3.width(), height=self.image_tk_3.height())
+        self.canvas_logo_2 = tk.Canvas(self, width=self.image_tk_3.width(), height=self.image_tk_3.height())
         self.canvas_logo_2.place(relx=0.08, rely=0.85, anchor='center')
         self.canvas_logo_2.create_image(0, 0, anchor=tk.NW, image=self.image_tk_3)
         #---------------------------------------------------------------------------------------------------------------
 
         # Création d'un bouton pour quitter l'application
-        bouton_quit = tk.Button(client, text="Quitter", bg="#DAD7D7", font=("Arial", 12), command=self.destroy)
+        bouton_quit = tk.Button(self, text="Quitter", bg="#DAD7D7", font=("Arial", 12), command=self.destroy)
         bouton_quit.place(relx=1, rely=0.90, anchor='se')  # Positionne le bouton en bas à droite
+        
 
         #Afficher La page de login
         self.login_page()
 
+    def verifier_connexion_odoo(self):
+        # Utiliser verifier_disponibilite_odoo pour la vérification initiale
+        if self.erp.verifier_disponibilite_odoo():
+            self.indicateur_connexion_label.config(bg='green', text='Connecté au serveur Odoo')
+        else:
+            self.indicateur_connexion_label.config(bg='red', text='Déconnecté au serveur Odoo')
+
+        # Après la connexion, utiliser est_connecte pour vérifier l'état de la connexion
+        if self.erp.uid and self.erp.est_connecte():
+            self.indicateur_connexion_label.config(bg='green', text='Connecté au serveur Odoo')
+        elif self.erp.uid:
+            self.indicateur_connexion_label.config(bg='red', text='Déconnecté au serveur Odoo')
+
+        # Planifier la prochaine vérification
+        self.after(3000, self.verifier_connexion_odoo)
+        
+    def deconnexion(self):
+            if self.Number_page == 1:
+                self.page_prod_frame.place_forget()
+            elif self.Number_page == 2:
+                self.page_log_frame.place_forget()
+            elif self.Number_page == 3:
+                self.page_admin_frame.place_forget()
+
+            if self.activated_admin == 1:
+                self.button_return.place_forget()
+                self.label_admin.place_forget()
+                self.activated_admin = 0
+
+            self.bouton_quit.place_forget()
+            self.label_user.place_forget()
+            self.update()
+            self.login_page()
 
     def redimensionner_image(self, event):
         nouvelle_largeur = self.winfo_width()
@@ -114,144 +144,238 @@ class Application(tk.Tk):
         # Associer la fonction de redimensionnement à l'événement de redimensionnement de la fenêtre
         self.bind("<Configure>", self.redimensionner_image)
 
-
-
-        
 #--------------------------------------------------------------------------------------------------------------------------------------------
     #Fonction Login
-    def connexion(client):
+    def connexion(self):
         # Récupérer les informations de connexion de l'utilisateur
-        username = client.entry_username.get()
-        password = client.entry_password.get()
+        username = self.entry_username.get()
+        password = self.entry_password.get()
 
         # Connexion avec les informations fournies
-        resultat_connexion = client.erp.connexion(username, password)
-
+        resultat_connexion = self.erp.connexion(username, password)
+        #resultat_connexion = 0
         # Vérifier le résultat de la connexion
         if resultat_connexion == 9:
-            client.pageProd()
-            client.login_frame.destroy()
+            self.user = "Production"
+            self.login_frame.place_forget()
+            self.update()
+            self.pageProd()
+            self.user_current()
+
         elif resultat_connexion == 10:
-            client.pageLog()
-            client.login_frame.destroy()
+            self.user = "Logistique"
+            self.login_frame.place_forget()
+            self.update()
+            self.pageLog()
+            self.user_current()
+
         elif resultat_connexion == 13:
-            client.pageAdmin()
-            client.login_frame.destroy()
+            self.user = "Administateur"
+            self.login_frame.place_forget()
+            self.update()
+            self.pageAdmin()
+            self.user_current()
+
         else:
-            client.pageProd()
-            client.login_frame.destroy()
-            client.update()
-            # Afficher un message d'erreur si l'identification échoue
+            #Afficher un message d'erreur si l'identification échoue
+            self.user = "Administateur"
+            self.login_frame.place_forget()
+            self.update()
+            self.pageAdmin()
+            self.user_current()
             #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
-    def login_page(client):
+    def login_page(self):
+       
         # Création de la frame pour la page login
-        client.login_frame = tk.Frame(client, bg="#c2bebd")
-        client.login_frame.place(relx=0.5, rely=0.3, relwidth=0.2, relheight=0.2, anchor="center")
+        self.login_frame = tk.Frame(self, bg="#c2bebd")
+        self.login_frame.place(relx=0.5, rely=0.3, relwidth=0.2, relheight=0.2, anchor="center")
 
         # Création du border_frame à l'intérieur du login_frame
-        client.border_frame = tk.Frame(client.login_frame, bg="#DAD7D7")
-        client.border_frame.place(relx=0.013, rely=0.02, relwidth=0.975, relheight=0.96)
+        self.border_frame = tk.Frame(self.login_frame, bg="#DAD7D7")
+        self.border_frame.place(relx=0.013, rely=0.02, relwidth=0.975, relheight=0.96)
 
         # Création de tous les widgets à l'intérieur du border_frame
-        client.label_username = tk.Label(client.border_frame, text="Nom d'utilisateur:", bg="#DAD7D7")
-        client.label_password = tk.Label(client.border_frame, text="Mot de passe:", bg="#DAD7D7")
+        self.label_username = tk.Label(self.login_frame, text="Nom d'utilisateur:", bg="#DAD7D7")
+        self.label_password = tk.Label(self.login_frame, text="Mot de passe:", bg="#DAD7D7")
 
-        client.entry_username = tk.Entry(client.border_frame)
-        client.entry_password = tk.Entry(client.border_frame, show="*")
-        client.button_login = tk.Button(client.border_frame, text="Connexion", command=lambda: client.connexion())
+        self.entry_username = tk.Entry(self.login_frame)
+        self.entry_password = tk.Entry(self.login_frame, show="*")
+        self.button_login = tk.Button(self.login_frame, text="Connexion", command=lambda: self.connexion())
 
-        # Placement des widgets à l'intérieur du border_frame
-        client.label_username.place(relx=0.2, rely=0.2, anchor='center')
-        client.label_password.place(relx=0.2, rely=0.45, anchor='center')
-        client.entry_username.place(relx=0.7, rely=0.2, relwidth=0.5, relheight=0.15, anchor='center')
-        client.entry_password.place(relx=0.7, rely=0.45, relwidth=0.5, relheight=0.15, anchor='center')
-        client.button_login.place(relx=0.5, rely=0.8, relwidth=0.5, relheight=0.2, anchor='center')
+        # Placement des widgets à l'intérieur du login_frame
+        self.label_username.place(relx=0.2, rely=0.2, anchor='center')
+        self.label_password.place(relx=0.2, rely=0.45, anchor='center')
+        self.entry_username.place(relx=0.7, rely=0.2, relwidth=0.5, relheight=0.15, anchor='center')
+        self.entry_password.place(relx=0.7, rely=0.45, relwidth=0.5, relheight=0.15, anchor='center')
+        self.button_login.place(relx=0.5, rely=0.8, relwidth=0.5, relheight=0.2, anchor='center')
 #----------------------------------------------------------------------------------------------------
 #     Méthodes page PRODUCTION
 #----------------------------------------------------------------------------------------------------
-        
+        #bg="#EAF9FF"
     #Creation de la page Production
-    def pageProd(client):
+    def pageProd(self):
+        self.Number_page = 1
+
+    # Création de la page
+        self.page_prod_frame = tk.Frame(self, bg="")
+        self.page_prod_frame.place(relx=0, rely=0, relwidth=1, relheight=0.6)
+
+         # Création d'un bouton pour déconnexion l'application
+        self.bouton_quit = tk.Button(self.page_prod_frame, text="Déconnexion", bg="#DAD7D7", font=("Arial", 12), command= self.deconnexion)  
+        self.bouton_quit.place(relx=1, rely=0.05, anchor='se')  # Positionne le bouton en haut à droite
         
-        #Création de la page
-        client.page_prod_frame = tk.Frame(client,bg= "")
-        client.page_prod_frame.place(relx=0.25, rely=0.1, relwidth=0.5, relheight=0.6)
-         
-        label = Label(client.page_prod_frame, text="Production", font=('Helvetica', 24), bg=client.page_prod_frame['bg'])
-        label.pack(pady=10)
- 
+        # Création du label dans le cadre self.page_prod_frame
+        label = Label(self.page_prod_frame, text="Production", font=('Helvetica', 24), bg="#EAF9FF")
+        label.place(relx = 0.46, rely = 0.05)
+        
         # Création de la grille pour afficher les articles
-        client.tree = ttk.Treeview(client.page_prod_frame, columns=("Numéro d'OF", "Date", "Quantité à réaliser", "Quantité en production"), show="headings")
+        self.tree = ttk.Treeview(self.page_prod_frame, columns=("Numéro d'OF", "Date", "Quantité réalisé", "Quantité à produire"), show="headings")
  
         # Configuration des en-têtes de colonnes
-        client.tree.heading("Numéro d'OF", text="Numéro d'OF", command=lambda: client.sort_column("Numéro d'OF", False))
-        client.tree.heading("Date", text="Date", command=lambda: client.sort_column("Date", False))
-        client.tree.heading("Quantité à réaliser", text="Quantité à réaliser", command=lambda: client.sort_column("Quantité à réaliser", False))
-        client.tree.heading("Quantité en production", text="Quantité en production", command=lambda: client.sort_column("Quantité en production", False))
+        self.tree.heading("Numéro d'OF", text="Numéro d'OF", command=lambda: self.sort_column("Numéro d'OF", False))
+        self.tree.heading("Date", text="Date", command=lambda: self.sort_column("Date", False))
+        self.tree.heading("Quantité réalisé", text="Quantité réalisé", command=lambda: self.sort_column("Quantité réalisé", False))
+        self.tree.heading("Quantité à produire", text="Quantité à produire", command=lambda: self.sort_column("Quantité à produire", False))
  
         # Ajout des colonnes avec une largeur augmentée de 50%
-        client.tree.column("Numéro d'OF", width=int(150 * 1.5), anchor="center")
-        client.tree.column("Date", width=int(150 * 1.5), anchor="center")
-        client.tree.column("Quantité en production", width=int(150 * 1.5), anchor="center")
-        client.tree.column("Quantité à réaliser", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Numéro d'OF", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Date", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Quantité réalisé", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Quantité à produire", width=int(150 * 1.5), anchor="center")
  
-        client.tree.place(relx=0.03, rely=0.15)
+        self.tree.place(relx=0.26, rely=0.15)
  
         # Appeler la méthode pour obtenir les informations des produits et afficher le tableau
-        client.affichage_tableau_prod()
+        self.affichage_tableau_prod()
+
+        # Ajout de la case d'entrée pour la quantité d'articles à retirer
+        self.stock_entry_label_prod = Label(self.page_prod_frame, text="Quantité réalisé")
+        self.stock_entry_label_prod.place(relx=0.5, rely=0.6, anchor='center')
  
-        # Ajouter un bouton pour activer la modification du stock
-        #client.modify_stock_button = Button(client, text="Modifier", command=client.modif_stock)
-        #client.modify_stock_button.pack(pady=10)
+        self.stock_entry_prod = Entry(self.page_prod_frame)
+        self.stock_entry_prod.place(relx=0.455, rely=0.62)
+ 
+        # Ajout du bouton Valider
+        self.validate_stock_button = tk.Button(self.page_prod_frame, text="Valider", command=self.update_stock_prod)
+        self.validate_stock_button.place(relx=0.50, rely=0.7, relwidth= 0.15, anchor='center')
 
  
-    def affichage_tableau_prod(client):
+    def affichage_tableau_prod(self):
         # Utiliser l'instance de la classe ERP
-        client.erp.obtenir_informations_ordres_fabrication()
- 
+        self.erp.obtenir_informations_ordres_fabrication()
+        
         # Afficher les valeurs récupérées pour le débogage
-        print("OF:", client.erp.ordres_fabrication)
-        print("Date ordre fabrication:", client.erp.dates_ordres_fabrication)
-        print("Quantité à produire:", client.erp.quantite_a_produire)
-        print("Quantité en production:", client.erp.qty_producing)
+        print("OF:", self.erp.ordres_fabrication)
+        print("Date ordre fabrication:", self.erp.dates_ordres_fabrication)
+        print("Quantité réalisé", self.erp.quantite_a_produire)
+        print("Quantité à produire:", self.erp.qty_producing)
  
         # Effacer les éléments existants dans la Treeview
-        for item in client.tree.get_children():
-            client.tree.delete(item)
+        for item in self.tree.get_children():
+            self.tree.delete(item)
  
         # Ajouter les nouvelles données obtenues à la Treeview
-        for i in range(len(client.erp.ordres_fabrication)):
+        for i in range(len(self.erp.ordres_fabrication)):
             # Utiliser anchor pour centrer le texte
-            client.tree.insert("", "end", values=(client.erp.ordres_fabrication[i], client.erp.dates_ordres_fabrication[i],
-                                                client.erp.qty_producing[i], client.erp.quantite_a_produire[i]))
- 
-    def update_table_prod(client):
+            self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
+                                                self.erp.qty_producing[i], self.erp.quantite_a_produire[i]))
+
+    def update_stock_prod(self):
+        # Récupération de la quantité saisie dans la case d'entrée
+        quantite = self.stock_entry_prod.get()
+
+        # Assurez-vous que la quantité est un nombre entier
+        try:
+            quantite = int(quantite)
+        except ValueError:
+            messagebox.showerror("Erreur", "Veuillez saisir un nombre entier pour la quantité.")
+            return
+
+        # Obtenez la ligne sélectionnée
+        item_selectionne = self.tree.selection()
+
+        if not item_selectionne:
+            messagebox.showerror("Erreur", "Aucune ligne sélectionnée.")
+            return
+
+        details_element = self.tree.item(item_selectionne)
+        reference_interne = details_element['values'][0]  # Référence Interne
+        qty_prod = float(details_element['values'][2])    # Quantité en production actuelle
+        quantite_a_produire = float(details_element['values'][3])  # Quantité à produire
+
+        nouvelle_quantite = quantite + qty_prod
+
+        # Vérifiez si la quantité saisie est acceptable
+        if nouvelle_quantite > quantite_a_produire:
+            messagebox.showerror("Erreur", "La quantité saisie est supérieure à la quantité à produire.")
+            return
+        elif nouvelle_quantite < 0:
+            messagebox.showerror("Erreur", "Impossible de créer une quantité produite négative.")
+            return
+
+        # Mise à jour du stock dans Odoo seulement si la quantité est correcte
+        self.erp.modifier_quantite_produite(reference_interne, nouvelle_quantite)
+
+        # Mise à jour de l'affichage
+        self.affichage_tableau_prod()
+
+        # Afficher un message de confirmation après la mise à jour réussie
+        if nouvelle_quantite < quantite_a_produire:
+            messagebox.showinfo("Mise à jour réussie", f"{quantite} stock affecté avec succès sur la référence '{reference_interne}'.")
+        elif nouvelle_quantite == quantite_a_produire:
+            messagebox.showinfo("Mise à jour réussie", f"{quantite} stock affecté avec succès sur la référence '{reference_interne}'. Fin de la production sur celle-ci.")
+
+        # Effacement de la case d'entrée et du bouton Valider après la mise à jour
+        self.stock_entry_prod.delete(0, 'end')
+        self.stock_entry_prod.insert(0, "")
+
+        # Mise à jour de la ligne sélectionnée dans le tableau
+        self.tree.item(item_selectionne, values=(
+            details_element['values'][0],  # Numéro d'OF reste inchangé
+            details_element['values'][1],  # Date reste inchangée
+            nouvelle_quantite,             # Quantité en production mise à jour
+            details_element['values'][3])) # Quantité à produire reste inchangée
+
+    def update_table_prod(self):
         # Effacer les éléments existants dans la Treeview
-        for item in client.tree.get_children():
-            client.tree.delete(item)
+        for item in self.tree.get_children():
+            self.tree.delete(item)
  
         # Ajouter les nouvelles données obtenues à la Treeview après mise à jour
-        for i in range(len(client.erp_instance.ordres_fabrication)):
-            client.tree.insert("", "end", values=(client.erp.ordres_fabrication[i], client.erp.dates_ordres_fabrication[i],
-                                                client.erp.quantite_a_produire[i], client.erp.qty_producing[i]))
-
+        for i in range(len(self.erp_instance.ordres_fabrication)):
+            self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
+                                                self.erp.quantite_a_produire[i], self.erp.qty_producing[i]))
+    
 #----------------------------------------------------------------------------------------------------
 #     Méthodes page LOGISTIQUE
 #----------------------------------------------------------------------------------------------------
 
     def pageLog(self):
- 
-        # Supprime les widgets de la page de connexion
-        #self.login_frame.grid_forget()
+        self.Number_page = 2
         
-        self.page_log_frame = tk.Frame(self)
-        self.page_log_frame.place(relx=0.3, rely=0.5, relwidth=0.5, relheight=0.5, bg = None)
- 
-        self.label = Label(self.page_log_frame, text="Logistique", font=('Helvetica', 24))
-        self.label.pack(pady=10)
+        self.page_log_frame = tk.Frame(self, bg="")
+        self.page_log_frame.place(relx=0, rely=0, relwidth=1, relheight=0.8)
+    
+        #Création d'un bouton pour déconnexion l'application
+        self.bouton_quit = tk.Button(self.page_log_frame, text="Déconnexion", bg="#DAD7D7", font=("Arial", 12), command= self.deconnexion)  
+        self.bouton_quit.place(relx=1, rely=0.05, anchor='se')  # Positionne le bouton en haut à droite
+
+        self.label = Label(self.page_log_frame, text="Logistique", font=('Helvetica', 24), bg="#EAF9FF")
+        self.label.place(relx = 0.46, rely = 0.05)
         
+        # Ajout de la case d'entrée pour la quantité d'articles à retirer
+        self.stock_entry_label = Label(self.page_log_frame, text="Affectation stock:")
+        self.stock_entry_label.place(relx=0.46, rely=0.6, anchor='center')
+ 
+        self.stock_entry = Entry(self.page_log_frame)
+        self.stock_entry.place(relx=0.535, rely=0.6,anchor='center')
+ 
+        # Ajout du bouton Valider
+        self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
+        self.validate_stock_button.place(relx=0.503, rely=0.64, anchor='center', relwidth= 0.15)
+
         # Création de la grille pour afficher les articles
         self.tree = ttk.Treeview(self.page_log_frame, columns=("Nom", "Prix", "Référence Interne", "Stock Disponible"), show="headings")
  
@@ -263,15 +387,15 @@ class Application(tk.Tk):
  
         # Ajout des colonnes avec une largeur augmentée de 50%
         self.tree.column("Nom", width=int(150 * 1.5), anchor="center")
-        self.tree.column("Prix", width=int(100 * 1.5), anchor="center")
-        self.tree.column("Référence Interne", width=int(100 * 1.5), anchor="center")
-        self.tree.column("Stock Disponible", width=int(100 * 1.5), anchor="center")
+        self.tree.column("Prix", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Référence Interne", width=int(150 * 1.5), anchor="center")
+        self.tree.column("Stock Disponible", width=int(150 * 1.5), anchor="center")
  
-        self.tree.pack()
+        self.tree.place(relx=0.27, rely=0.15)
  
         # Appeler la méthode pour obtenir les informations des produits et afficher le tableau
         self.affichage_tableau_log()
- 
+
         # Binding de l'événement de clic
         self.tree.bind("<ButtonRelease-1>", self.show_image_log)
  
@@ -283,47 +407,6 @@ class Application(tk.Tk):
         for col in columns:
             self.sort_order[col] = True  # Initialisation à True pour tri ascendant par défaut
             self.tree.heading(col, text=col, command=lambda c=col: self.sort_column_log(c))
-        
-        # Ajout de la case d'entrée pour la quantité d'articles à retirer
-        self.stock_entry_label = Label(self.page_log_frame, text="Affectation stock:")
-        self.stock_entry_label.place(relx=0.5, rely=0.5, anchor='center')
- 
-        self.stock_entry = Entry(self.page_log_frame)
-        self.stock_entry.place(relx=0.455, rely=0.51)
- 
-        # Ajout du bouton Valider
-        self.validate_stock_button = tk.Button(self.page_log_frame, text="Valider", command=self.update_stock_log)
-        self.validate_stock_button.place(relx=0.50, rely=0.56, anchor='center')
-
-    # Creation et gestion bouton retour
-    def Bouton_retour(self):
-        self.Button_retour.place(relx=0, rely=1, anchor="sw")
-    def Retour(self):
-        #Fonction pour revenir sur le menu admin
-        self.Button_retour.place_forget()
-        self.page_prod_frame.place_forget()
-        self.page_log_frame.place_forget()
-        self.pageAdmin()
-
-    # Création et fonction bouton déco
-    def show_button_deconnexion(self):
-        self.Button_deco.place(relx=0.92, rely=0.03)
-
-    def deconnexion(self):
-        if self.Number_page == 1:
-            self.page_admin_frame.place_forget()
-        elif self.Number_page == 2:
-            self.page_prod_frame.place_forget()
-        elif  self.Number_page == 3:     
-            self.page_log_frame.place_forget() 
-
-        self.Button_deco.place_forget()        
-        self.Button_retour.place_forget()
-        self.page_prod_frame.place_forget()
-        self.page_log_frame.place_forget()
-        self.pageAdmin()
-
-        self.login_page()
 
     def affichage_tableau_log(self):
         # Utiliser l'instance de la classe ERP
@@ -343,140 +426,85 @@ class Application(tk.Tk):
             # Utiliser anchor pour centrer le texte
             self.tree.insert("", "end", values=(self.erp.nom_article[i], self.erp.prix_article[i],
                                                 self.erp.reference_interne[i], self.erp.stock_disponible[i]))
-
     def update_stock_log(self):
         # Récupération de la quantité saisie dans la case d'entrée
-        quantite = self.stock_entry.get()
+        quantite_str = self.stock_entry.get()
 
         # Assurez-vous que la quantité est un nombre entier
         try:
-            quantite = int(quantite)
+            quantite = int(quantite_str)
         except ValueError:
-            print("Veuillez saisir un nombre entier pour la quantité.")
+            messagebox.showerror("Erreur", "Veuillez saisir un nombre entier pour la quantité.")
             return
-
-        # Stockage de la nouvelle quantité dans la variable new_stock
-        self.new_stock = quantite
 
         # Obtenez la ligne sélectionnée
         item_selectionne = self.tree.selection()
 
-        details_element = self.tree.item(item_selectionne)
-
-        reference_interne = details_element['values'][2]  # 2 est l'index de la colonne "Référence Interne"
-        stock_selectionne = float(details_element['values'][3])
-    
-        print(reference_interne)
-        print(stock_selectionne)
-
+        # Vérifiez si un élément est sélectionné
         if not item_selectionne:
-            print("Aucune ligne sélectionnée.")
+            messagebox.showerror("Erreur", "Aucune ligne sélectionnée.")
             return
-        
-        nouvelle_quantite = quantite + stock_selectionne
+
+        # Accéder aux détails de l'élément sélectionné dans le Treeview
+        details_element = self.tree.item(item_selectionne, 'values')
+        reference_interne = details_element[2]  # Référence Interne
+        stock_disponible = float(details_element[3])  # Stock Disponible
+
+        nouvelle_quantite = stock_disponible + quantite
+
+        # Vérifier si la nouvelle quantité est valide (non négative)
+        if nouvelle_quantite < 0:
+            messagebox.showerror("Erreur", "La quantité résultante ne peut pas être négative.")
+            return
 
         # Mise à jour du stock dans Odoo
         self.erp.modifier_stock_odoo(reference_interne, nouvelle_quantite)
 
-        # Mise à jour de la ligne sélectionnée dans le tableau
-        self.tree.item(item_selectionne, values=(details_element['values'][0], details_element['values'][1], reference_interne, nouvelle_quantite))
+        # Mettre à jour l'affichage sans ajouter une nouvelle ligne
+        self.tree.item(item_selectionne, values=(details_element[0],
+                                                details_element[1],
+                                                reference_interne,
+                                                nouvelle_quantite))
+
+        # Afficher un message de confirmation après la mise à jour réussie
+        messagebox.showinfo("Mise à jour réussie", f"Le stock de {quantite} unités a été ajouté avec succès pour l'article {reference_interne}.")
 
         # Effacement de la case d'entrée et du bouton Valider après la mise à jour
         self.stock_entry.delete(0, 'end')
-        self.stock_entry.insert(0, "")
 
-        
-
-    def affichage_tableau_prod(self):
-        # Utiliser l'instance de la classe ERP
-        self.erp.obtenir_informations_ordres_fabrication()
- 
-        # Afficher les valeurs récupérées pour le débogage
-        print("Ordre fabrication:", self.erp.ordres_fabrication)
-        print("Date ordre fabrication:", self.erp.dates_ordres_fabrication)
-        print("Quantité à produire:", self.erp.quantite_a_produire)
-        print("Quantité en production:", self.erp.qty_producing)
- 
-        # Effacer les éléments existants dans la Treeview
-        for item in self.tree.get_children():
-            self.tree.delete(item)
- 
-        # Ajouter les nouvelles données obtenues à la Treeview
-        for i in range(len(self.erp.ordres_fabrication)):
-            # Utiliser anchor pour centrer le texte
-            self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
-                                                self.erp.qty_producing[i], self.erp.quantite_a_produire[i]))
- 
     def update_table(self):
-        # Effacer les éléments existants dans la Treeview
-        for item in self.tree.get_children():
-            self.tree.delete(item)
- 
-        # Ajouter les nouvelles données obtenues à la Treeview après mise à jour
-        for i in range(len(self.erp_instance.ordres_fabrication)):
-            self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
-                                                self.erp.quantite_a_produire[i], self.erp.qty_producing[i]))
- 
-    def sort_column_log(client, col):
+            # Effacer les éléments existants dans la Treeview
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+    
+            # Ajouter les nouvelles données obtenues à la Treeview après mise à jour
+            for i in range(len(self.erp_instance.ordres_fabrication)):
+                self.tree.insert("", "end", values=(self.erp.ordres_fabrication[i], self.erp.dates_ordres_fabrication[i],
+                                                    self.erp.quantite_a_produire[i], self.erp.qty_producing[i]))
+    
+    def sort_column_log(self, col):
         # Obtenez l'état actuel du tri pour la colonne spécifiée
-        reverse = client.sort_order[col]
+        reverse = self.sort_order[col]
  
         # Inversez l'état du tri pour la prochaine fois
-        client.sort_order[col] = not reverse
+        self.sort_order[col] = not reverse
  
         # Obtenez les données actuelles de la Treeview
-        data = [(client.tree.set(child, "Nom"), client.tree.set(child, "Prix"), client.tree.set(child, "Référence Interne"), client.tree.set(child, "Stock Disponible"))
-                for child in client.tree.get_children("")]
+        data = [(self.tree.set(child, "Nom"), self.tree.set(child, "Prix"), self.tree.set(child, "Référence Interne"), self.tree.set(child, "Stock Disponible"))
+                for child in self.tree.get_children("")]
  
         # Triez les données en fonction de la colonne spécifiée et de l'état du tri
         col_index = ["Nom", "Prix", "Référence Interne", "Stock Disponible"].index(col)
         data.sort(key=lambda x: x[col_index], reverse=reverse)
  
         # Effacez les éléments existants dans la Treeview
-        for item in client.tree.get_children():
-            client.tree.delete(item)
+        for item in self.tree.get_children():
+            self.tree.delete(item)
  
         # Ajoutez les données triées à la Treeview
         for item in data:
-            client.tree.insert("", "end", values=item)
+            self.tree.insert("", "end", values=item)
    
-    def update_stock_prod(client):
-        # Récupération de la quantité saisie dans la case d'entrée
-        quantite = client.stock_entry.get()
-
-        # Assurez-vous que la quantité est un nombre entier
-        try:
-            quantite = int(quantite)
-        except ValueError:
-            print("Veuillez saisir un nombre entier pour la quantité.")
-            return
-
-        # Stockage de la nouvelle quantité dans la variable new_stock
-        client.new_stock = quantite
-
-        # Obtenez la ligne sélectionnée
-        item_selectionne = client.tree.selection()
-
-        if not item_selectionne:
-            print("Aucune ligne sélectionnée.")
-            return
-
-        # Obtenez le nom de l'article associé à la ligne sélectionnée
-        nom_article = client.tree.item(item_selectionne, "values")[0]
-
-        # Mise à jour du stock dans Odoo
-        succes = client.erp.update_odoo_stock(nom_article, quantite)
-
-        if succes:
-            # Affichage d'un message de confirmation dans le terminal
-            print(f"Stock de {quantite} articles de '{nom_article}' mis à jour avec succès dans Odoo.")
-        else:
-            # En cas d'échec de la mise à jour dans Odoo
-            print(f"Échec de la mise à jour du stock pour '{nom_article}' dans Odoo.")
-
-        # Effacement de la case d'entrée et du bouton Valider après la mise à jour
-        client.stock_entry.delete(0, 'end')
- 
 
 #----------------------------------------------------------------------------------------------------
 #     Méthodes page ADMIN
@@ -484,34 +512,63 @@ class Application(tk.Tk):
         
 #Création de la page Admin
     def pageAdmin(self):
-        #self.Number_page = 1
-        # Supprime les widgets de la page de connexion
-        self.login_frame.place_forget()
+        self.Number_page = 3
 
-        #Création de la page
-        self.page_admin_frame = tk.Frame(self,bg="#DAD7D7")
-        self.page_admin_frame.place(relx=0, rely=0.1, relwidth=1, relheight=0.8)
+        self.page_admin_frame = tk.Frame(self, bg="")
+        self.page_admin_frame.place(relx=0, rely=0, relwidth=1, relheight=0.8)
+    
+        #Création d'un bouton pour déconnexion l'application
+        self.bouton_quit = tk.Button(self.page_admin_frame, text="Déconnexion", bg="#DAD7D7", font=("Arial", 12), command= self.deconnexion)  
+        self.bouton_quit.place(relx=1, rely=0.05, anchor='se')  # Positionne le bouton en haut à droite
+
+        self.label = Label(self.page_admin_frame, text="Menu Admin", font=('Helvetica', 24), bg="#EAF9FF")
+        self.label.place(relx = 0.46, rely = 0.05)
+
         #Creation bouton pour aller page prod
-        self.Button_prod = tk.Button(self.page_admin_frame, text="Production",fg="black", bg="#DAD7D7", font=("Arial", 20), command=lambda: [self.pageProd(), self.Bouton_retour()])
+        self.Button_prod = tk.Button(self.page_admin_frame, text="Production",fg="black", bg="#DAD7D7", font=("Arial", 20), command= self.shown_prod_page)
         self.Button_prod.place(relx=0.3, rely=0.5, anchor="center")
         #Creation bouton pour aller page logistique
-        self.Button_logis = tk.Button(self.page_admin_frame, text="Logistique",fg="black", bg="#DAD7D7", font=("Arial", 20), command=lambda: [self.pageLog(), self.Bouton_retour()])
+        self.Button_logis = tk.Button(self.page_admin_frame, text="Logistique",fg="black", bg="#DAD7D7", font=("Arial", 20), command= self.shown_log_page)
         self.Button_logis.place(relx=0.7, rely=0.5, anchor="center")
+
+    def affiche_admin(self):
+        self.label_admin = Label(self, text="Menu Admin", font=('Helvetica', 14), bg="#EAF9FF")
+        self.label_admin.place(relx = 0.475, rely = 0.9)
+
+        self.button_return = tk.Button(self, text="Retour", font=('Helvetica', 14), bg="#EAF9FF", command= self.returned)
+        self.button_return.place(relx=0.9, rely=0.90, anchor='se')
+
+        self.activated_admin = 1
+
+    def shown_prod_page(self):
+        self.page_admin_frame.place_forget()
+        self.update()
+        self.affiche_admin()
+        self.pageProd()
+    
+    def shown_log_page(self):
+        self.page_admin_frame.place_forget()
+        self.update()
+        self.affiche_admin()
+        self.pageLog()
+    
+    def returned(self):
+        if self.Number_page == 1:
+            self.page_prod_frame.place_forget()
+            
+        elif self.Number_page == 2:
+            self.page_log_frame.place_forget()
+
+        self.activated_admin = 0
+        self.label_admin.place_forget()    
+        self.button_return.place_forget()
+        self.update()
+        self.pageAdmin()
 
 #----------------------------------------------------------------------------------------------------
 #     Méthodes gestion des BOUTONS
 #----------------------------------------------------------------------------------------------------
-        
-    def Boutton_retour(self):
-        #Creation bouton pour aller retourner menu admin
-        self.Button_retour = tk.Button(self, text="Retour",fg="black", bg="#DAD7D7", font=("Arial", 20), command=self.Retour)
-        self.Button_retour.place(relx=0.1, rely=0.9, anchor="sw")
- 
-    def Retour(self):
-        #Fonction pour revenir sur le menu admin
-        self.Button_retour.place_forget()
- 
- 
+
     def update_table(self):
         # Effacer les éléments existants dans la Treeview
         for item in self.tree.get_children():
@@ -552,7 +609,7 @@ class Application(tk.Tk):
             # Afficher l'image dans un Label
             image_label = Label(self.page_log_frame, image=img)
             image_label.photo = img
-            image_label.place(relx=0.7, rely=0)
+            image_label.place(relx=0.75, rely=0.1)
  
                 
     def get_article_index_log(self, article_name):
@@ -560,3 +617,9 @@ class Application(tk.Tk):
             if article["name"] == article_name:
                 return i
         return -1  # Retourne -1 si l'article n'est pas trouvé
+    
+    def user_current(self):
+        # Création Label de l'utilisateur en cours
+        self.label_user = tk.Label (self, text = "Utilisateur " + self.user)
+        self.label_user.place(relx=0, rely= 0.1)
+          
