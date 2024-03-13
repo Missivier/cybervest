@@ -96,7 +96,6 @@ Ouvrez le serveur ERP Odoo dans votre navigateur en accédant à [ce lien](http:
 
   3. Restauration de la Base de Données
 
-Sur le site, accédez à "Gestion des bases de données" puis sélectionnez "Restore Database".
 Entrez le mot de passe principal (MSIR5), parcourez et sélectionnez le fichier .ZIP téléchargé dans le même répertoire que le référentiel cloné.
 Nommez votre base de données "cybervest".
 
