@@ -624,5 +624,5 @@ class Application(tk.Tk):
     def user_current(self):
         # Création Label de l'utilisateur en cours
         self.label_user = tk.Label (self, text = "Utilisateur : " + self.user)
-        self.label_user.place(relx=0, rely= 0.1)
+        self.label_user.place(relx=0, rely= 0.05)
           
