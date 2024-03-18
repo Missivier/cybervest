@@ -28,14 +28,24 @@ Pour cela, le service informatique a pour but d'intégrer une application pour i
 
 ## **Prérequis**
 
-Pour le déploiement de l'application, il faut: - Python 3
-                                               - Pip 3 (Généralement installé automatiquement avec Python3)
+Pour le déploiement de l'application, il faut: - 3PC's avec Windows
+                                               - 3VM's  --> Pour le PC1, une VM Linux Debian11 avec Docker, une image Odoo V15 et une image PostgreSQL v13 
+                                                        --> Pour le PC2, une VM Linux Debian11 avec Python 3.9
+                                                        --> Pour le PC3, une VM Windows 10 avec Python 3.9
+                                               - une SSD avec les 3 VM's et le projet avec un dossier odoo pour le PC1 et un dossier application pour le PC2 et PC3
+                                               - Connexion Wi-fi SSID: afpicfai_wifi_guest pour les 3PC's 
                                                
-
-
 ## **Installation**
 
-### ***1. Déployer docker***
+### *** Installation des VM's sur les PC's***
+  1. Ouvrir Oracle
+  2. Cliquer sur Ajouter
+  3. Sélectionner la VM1 sur le PC1 (Master Debian 11), la VM2 sur le PC2 (Base Debian 11), la VM2 sur le PC2 (Windows 10)
+  4. Sur chaque VM, cliquer sur Configuration
+  5. Dans l'onglet Réseau, changer le paramètre "Mode d'accès réseau" par "Accès par pont"
+  6. Pour lancer les VM's, il suffit de cliquer sur Démarrer
+
+### *** Déployer docker (Sur la PC1)***
   1. Rendez-vous sur [ce lien](http://localhost:9000/)
   2. Sélectionner **Stacks** dsans le menu de la liste de gauche
      
@@ -86,36 +96,30 @@ Pour le déploiement de l'application, il faut: - Python 3
       ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/Image%20en%20run.png)
 
 ### ***2. Installation du Serveur ERP sur une machine virtuelle Linux***
-  1. Récupération du Serveur ERP
- ```
-git clone https://github.com/Missivier/cybervest
-  ```
-  2. Accès au Serveur ERP Odoo
+  1. Accès au Serveur ERP
+  Rendez-vous sur [ce lien](http://localhost:8069/)
+  2. Backup ERP odoo
+     Récuperer le Fichier .zip présent dans le dossier odoo
+  Cliquer sur restore data base 
+  
+   ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/restore%20database.png)
+  
+  Entrez le mot de passe principal (jslpdl), parcourez et sélectionnez le fichier .ZIP téléchargé dans le même répertoire que le référentiel cloné.
+  Nommez votre base de données "db_cybervest".
+  
+  ![Image en run](https://github.com/Missivier/cybervest/blob/main/images/zip.png)
+     
+  3. 
 
-Ouvrez le serveur ERP Odoo dans votre navigateur en accédant à [ce lien](http://localhost:8069/) ou en cliquant sur "8069" dans la colonne "published ports" du Docker fraîchement créé.
+  4. Modification du réglage reseau (VM)
 
-  3. Restauration de la Base de Données
-
-Entrez le mot de passe principal (jslpdl), parcourez et sélectionnez le fichier .ZIP téléchargé dans le même répertoire que le référentiel cloné.
-Nommez votre base de données "db_cybervest".
-
-  4. Configuration de l'Adresse IP
-
-Changez l'adresse IP de votre machine virtuelle hébergeant le Docker en 172.31.11.241.
 Modifiez les paramètres réseau pour passer en mode pont.
 Déconnectez et reconnectez-vous du réseau WiFi de la machine virtuelle pour appliquer les modifications.
 
-### ***3. Installation du Desktop sur Linux***
-  1. Configuration du Réseau
+### ***3. Installation de l'application sur Linux***
+  1. Récupération de l'application
+Dans le SSD, récupérer le dossier "Application", et le glisser dans le dossier "Mes documents"
 
-Connectez-vous au réseau "afpicfai_wifi_guests" et passez les paramètres réseau de votre VM en mode pont. Redémarrez la VM.
-
-   ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/wifi.png)
-
-  2. Récupération du Code
- ```
-git clone https://github.com/Missivier/cybervest
-  ```
   3. Installation des Dépendances
  ```
 pip install -r requierement_linux.txt
@@ -134,19 +138,8 @@ Connectez-vous au réseau "afpicfai_wifi_guests" et passez les paramètres rése
 
    ![Image Web editor](https://github.com/Missivier/cybervest/blob/main/images/wifi.png)
 
- 2. Installation de Git Bash
-    
-Téléchargez et installez Git Bach depuis [ce lien](https://git-scm.com/download/win) en sélectionnant "64-bit Git for Windows Setup".
-
   3. Récupération du Code
- ```
-git clone https://github.com/Missivier/cybervest
-  ```
-
-  4. Installation de Python
-
-Installez Python en ouvrant l'invite de commande et en tapant python3. Suivez les instructions pour installer à partir du Microsoft Store.
-Vérifiez si Python s'est correctement installé en tapant python --version dans l'invite de commande.
+Dans l
 
   5. Installation des Dépendances
  ```

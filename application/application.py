@@ -48,8 +48,10 @@ class Application(tk.Tk):
         self.resizable(False, False)
 
         # Initialiser et placer l'indicateur de connexion
-        self.indicateur_connexion_label = Label(self, text="Vérification...", bg='yellow', fg='black', width=25, height=3)
-        self.indicateur_connexion_label.place(relx=0.95, rely=0.85, anchor='ne')
+        self.indicateur_connexion_label = Label(self, bg='yellow', fg='black', width=2, height=1)
+        self.indicateur_connexion_label.place(relx=0.10, rely=0.01)
+        self.text_connexion = tk.Label(self,bg='#296589', text="Etat de la connection: ", width=20, height=1)
+        self.text_connexion.place(relx=0.01, rely=0.01)
 
         # Vérifier l'état de la connexion initiale et puis périodiquement
         self.verifier_connexion_odoo()
@@ -83,15 +85,16 @@ class Application(tk.Tk):
     def verifier_connexion_odoo(self):
         # Utiliser verifier_disponibilite_odoo pour la vérification initiale
         if self.erp.verifier_disponibilite_odoo():
-            self.indicateur_connexion_label.config(bg='green', text='Connecté au serveur Odoo')
+           self.indicateur_connexion_label.config(bg='green')
         else:
-            self.indicateur_connexion_label.config(bg='red', text='Déconnecté au serveur Odoo')
+            self.indicateur_connexion_label.config(bg='red')
 
         # Après la connexion, utiliser est_connecte pour vérifier l'état de la connexion
         if self.erp.uid and self.erp.est_connecte():
-            self.indicateur_connexion_label.config(bg='green', text='Connecté au serveur Odoo')
+            self.indicateur_connexion_label.config(bg='green')
+
         elif self.erp.uid:
-            self.indicateur_connexion_label.config(bg='red', text='Déconnecté au serveur Odoo')
+            self.indicateur_connexion_label.config(bg='red')
 
         # Planifier la prochaine vérification
         self.after(3000, self.verifier_connexion_odoo)
@@ -178,12 +181,7 @@ class Application(tk.Tk):
 
         else:
             #Afficher un message d'erreur si l'identification échoue
-            self.user = "Administateur"
-            self.login_frame.place_forget()
-            self.update()
-            self.pageAdmin()
-            self.user_current()
-            #messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
+            messagebox.showerror("Erreur", "Identifiant ou mot de passe incorrect")
 
     #Création de la page login
     def login_page(self):
@@ -620,6 +618,6 @@ class Application(tk.Tk):
     
     def user_current(self):
         # Création Label de l'utilisateur en cours
-        self.label_user = tk.Label (self, text = "Utilisateur " + self.user)
-        self.label_user.place(relx=0, rely= 0.1)
+        self.label_user = tk.Label (self, text = "Utilisateur : " + self.user)
+        self.label_user.place(relx=0, rely= 0.05)
           
